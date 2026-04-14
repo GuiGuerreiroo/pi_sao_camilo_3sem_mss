@@ -6,8 +6,6 @@ from src.shared.domain.entities.user import User
 from src.shared.domain.enums.role_enum import ROLE
 from src.shared.domain.repositories.user_repository_interface import IUserRepository
 from src.shared.environments import Environments
-from src.shared.helpers.errors.usecase_errors import NoItemsFound
-from src.shared.infra.dto.user_dynamo_dto import UserDynamoDTO
 from src.shared.infra.external.dynamo.datasources.dynamo_datasource import DynamoDatasource
 
 
@@ -75,6 +73,25 @@ class UserRepositoryDynamo(IUserRepository):
 
     #     return users
 
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        filter_expression= "email = :email"
+        expression_attribute_values= {":email": email}
+
+        items= self.dynamo.scan_items(
+            filter_expression= filter_expression,
+            expression_attribute_values= expression_attribute_values
+        )
+
+        if not items:
+            return None
+
+        item= items[0]
+
+        item["user_id"]= self.remove_prefix(item["user_id"])
+
+        user= User.model_validate(item)
+
+        return user
 
     def create_user(self, new_user: User) -> Optional[User]:
         item= new_user.model_dump_json()
