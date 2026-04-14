@@ -49,7 +49,7 @@ Next, you need to configure DynamoDB for your project and Docker compose. Follow
 
 ###### Linux
 
-    virtualenv -p python3.9 venv
+    virtualenv -p python3.13 venv
 
 ### Activate the venv
 
