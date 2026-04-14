@@ -87,25 +87,3 @@ class UserRepositoryMock(IUserRepository):
                     user.height = new_height
                 return user
         return None
-    
-    # def get_users(
-    #     self,
-    #     user_id: str, 
-    #     name: str | None, 
-    #     new_email: str | None,
-    #     new_role: ROLE | None, 
-    #     new_height: float | None
-    # ):
-    #     filters = locals().copy()
-    #     filters.pop("self")
-        
-    #     filters = {k: v for k, v in filters.items() if v is not None}
-        
-    #     users = []
-
-    #     for user in self.users:
-    #         user_dict = user.__dict__
-    #         if all(user_dict.get(key) == value for key, value in filters.items()):
-    #             users.append(user)
-
-    #     return users

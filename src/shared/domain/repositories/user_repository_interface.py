@@ -20,6 +20,12 @@ class IUserRepository(ABC):
     # def get_all_users(self) -> List[User]:
     #     pass
 
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        """
+        If user not found return None
+        """
+        pass
+
     @abstractmethod
     def create_user(self, new_user: User) -> Optional[User]:
         pass
