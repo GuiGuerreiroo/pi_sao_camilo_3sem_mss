@@ -8,7 +8,7 @@ from src.shared.environments import Environments
 
 
 def setup_dynamo_table():
-    dynamo_table_name = "user_mss_template-table"
+    dynamo_table_name = "ProjetoNutriEsportivaSaoCamiloTable"
     endpoint_url = "http://localhost:8000"
     partition_key = "PK"
     sort_key = "SK"
@@ -60,8 +60,7 @@ def setup_dynamo_table():
         table.put_item(
             Item={
                 partition_key: 'COUNTER',
-                sort_key: 'COUNTER',
-                'COUNTER': Decimal(0)
+                sort_key: 'COUNTER'
             }
         )
 
@@ -89,22 +88,21 @@ def load_mock_to_local_dynamo():
 def load_mock_to_real_dynamo():
     mock_repo = UserRepositoryMock()
     dynamo_repo = UserRepositoryDynamo()
-    envs = Environments.get_envs()
 
     count = 0
 
-    dynamodb = boto3.resource('dynamodb', region_name=envs.region)
-    table = dynamodb.Table(envs.dynamo_table_name)
+    # dynamodb = boto3.resource('dynamodb', region_name=envs.region)
+    # table = dynamodb.Table(envs.dynamo_table_name)
 
-    print("Adding counter to table")
+    # print("Adding counter to table")
 
-    table.put_item(
-        Item={
-            envs.dynamo_partition_key: 'COUNTER',
-            envs.dynamo_sort_key: 'COUNTER',
-            'COUNTER': Decimal(0)
-        }
-    )
+    # table.put_item(
+    #     Item={
+    #         envs.dynamo_partition_key: 'COUNTER',
+    #         envs.dynamo_sort_key: 'COUNTER',
+    #         'COUNTER': Decimal(0)
+    #     }
+    # )
 
     print('Loading mock data to dynamo...')
     for user in mock_repo.users:
