@@ -24,7 +24,10 @@ class IacStack(Stack):
         stage = kwargs['tags']['stage']
 
         self.apigw_construct= ApigwConstruct(self, "Apigw")
+        
         self.dynamo_construct= DynamoConstruct(self, "NutriDynamo")
+
+        self.cognito_construct= CognitoConstruct(self, "SaoCamiloUserPool")
 
         ENVIRONMENT_VARIABLES= {
             "STAGE": stage,
@@ -32,9 +35,6 @@ class IacStack(Stack):
             "SAO_CAMILO_TABLE_NAME": self.dynamo_construct.sao_camilo_table.table_name,
             "USER_POOL_ID": self.cognito_construct.user_pool.user_pool_id
         }
-
-        self.cognito_construct= CognitoConstruct(self, "SaoCamiloUserPool")
-
 
         api_authorizer= apigw.CognitoUserPoolsAuthorizer(
             self,
