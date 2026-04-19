@@ -1,3 +1,4 @@
+from src.shared.environments import Environments
 import uuid
 from .create_user_cognito_usecase import CreateUserCognitoUseCase
 from src.shared.domain.enums.role_enum import ROLE
@@ -16,8 +17,8 @@ class CreateUserCognitoController:
         try:
             request_user_pool_id= event.get('userPoolId')
 
-            if request_user_pool_id != os.environ.get('USER_POOL_ID'):
-                raise ForbiddenAction("user_poo_id")
+            if request_user_pool_id != Environments.get_envs().user_pool_id:
+                raise ForbiddenAction("user_pool_id")
             
             if event.get('triggerSource') != "PostConfirmation_ConfirmSignUp": 
                 return
