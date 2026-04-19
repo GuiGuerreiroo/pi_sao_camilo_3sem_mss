@@ -26,6 +26,7 @@ class CreateUserCognitoUseCase:
                     user= User(
                         user_id= user_id,
                         name= name,
+                        email= email,
                         role=role,
                         height=height
                     )
@@ -35,6 +36,7 @@ class CreateUserCognitoUseCase:
                     user= User(
                         user_id= user_id,
                         name= name,
+                        email= email,
                         role=role,
                     )
 
