@@ -10,9 +10,10 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 
 class FakeUser:
-    def __init__(self, user_id: str, name: str, role: ROLE, height: float | None = None):
+    def __init__(self, user_id: str, name: str, email: str, role: ROLE, height: float | None = None):
         self.user_id = user_id
         self.name = name
+        self.email = email
         self.role = role
         self.height = height
 
