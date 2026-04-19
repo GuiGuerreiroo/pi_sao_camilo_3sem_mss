@@ -10,6 +10,9 @@ from src.shared.environments import Environments
 def setup_dynamo_table():
     dynamo_table_name = "user_mss_template-table"
     endpoint_url = "http://localhost:8000"
+    partition_key = "PK"
+    sort_key = "SK"
+
     print("Setting up DynamoDB table...")
 
     dynamo_client = boto3.client('dynamodb', endpoint_url=endpoint_url)
@@ -22,21 +25,21 @@ def setup_dynamo_table():
             TableName=dynamo_table_name,
             KeySchema=[
                 {
-                    'AttributeName': 'PK',
+                    'AttributeName': partition_key,
                     'KeyType': 'HASH'
                 },
                 {
-                    'AttributeName': 'SK',
+                    'AttributeName': sort_key,
                     'KeyType': 'RANGE'
                 }
             ],
             AttributeDefinitions=[
                 {
-                    'AttributeName': 'PK',
+                    'AttributeName': partition_key,
                     'AttributeType': 'S'
                 },
                 {
-                    'AttributeName': 'SK',
+                    'AttributeName': sort_key,
                     'AttributeType': 'S'
                 }
 
@@ -56,8 +59,8 @@ def setup_dynamo_table():
 
         table.put_item(
             Item={
-                'PK': 'COUNTER',
-                'SK': 'COUNTER',
+                partition_key: 'COUNTER',
+                sort_key: 'COUNTER',
                 'COUNTER': Decimal(0)
             }
         )
@@ -86,18 +89,19 @@ def load_mock_to_local_dynamo():
 def load_mock_to_real_dynamo():
     mock_repo = UserRepositoryMock()
     dynamo_repo = UserRepositoryDynamo()
+    envs = Environments.get_envs()
 
     count = 0
 
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(dynamo_table_name=Environments.get_envs().dynamo_table_name)
+    dynamodb = boto3.resource('dynamodb', region_name=envs.region)
+    table = dynamodb.Table(envs.dynamo_table_name)
 
     print("Adding counter to table")
 
     table.put_item(
         Item={
-            'PK': 'COUNTER',
-            'SK': 'COUNTER',
+            envs.dynamo_partition_key: 'COUNTER',
+            envs.dynamo_sort_key: 'COUNTER',
             'COUNTER': Decimal(0)
         }
     )

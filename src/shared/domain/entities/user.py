@@ -1,60 +1,50 @@
-import abc
-import re
+import uuid
+from pydantic import *
 
-from src.shared.domain.enums.state_enum import STATE
-from src.shared.helpers.errors.domain_errors import EntityError
+from src.shared.domain.enums.role_enum import ROLE
 
+class User(BaseModel):
+    user_id: str= Field(
+        description="Id do usuário",
+        default_factory=lambda: str(uuid.uuid4())
+    )
 
-class User(abc.ABC):
-    name: str
-    email: str
-    state: STATE
-    MIN_NAME_LENGTH = 2
-    user_id: int
+    name: str= Field(
+        description="Nome do usuário",
+        min_length=2
+    )
 
-    def __init__(self, name: str, email: str, state: STATE, user_id: int = None):
-        if not User.validate_name(name):
-            raise EntityError("name")
-        self.name = name
+    email: str= Field(
+        description="Email do usuário"
+    )
 
-        if not User.validate_email(email):
-            raise EntityError("email")
-        self.email = email
+    role: ROLE= Field(
+        description="Role do usuário",
+        default=ROLE.USER
+    )
 
-        if type(user_id) == int:
-            if user_id < 0:
-                raise EntityError("user_id")
+    height: float | None= Field(
+        description="Altrura do usuário (M)",
+        default=None
+    )
 
-        if type(user_id) != int and user_id is not None:
-            raise EntityError("user_id")
+    # weight: float | None= Field(
+    #     description="Peso do usuário (Kg)",
+    #     default=None
+    # )
 
-        self.user_id = user_id
+    model_config= ConfigDict(
+        extra="forbid",
+        populate_by_name=True
+    )
 
-        if type(state) != STATE:
-            raise EntityError("state")
-        self.state = state
+    @field_validator("user_id")
+    @classmethod
+    def user_id_valid_uuid4(cls, v: str) -> str:
+        try:
+            uuid.UUID(v)
 
-    @staticmethod
-    def validate_name(name: str) -> bool:
-        if name is None:
-            return False
-        elif type(name) != str:
-            return False
-        elif len(name) < User.MIN_NAME_LENGTH:
-            return False
-
-        return True
-
-    @staticmethod
-    def validate_email(email: str) -> bool:
-        if email is None:
-            return False
-
-        regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-
-        return bool(re.fullmatch(regex, email))
-
-
-
-    def __repr__(self):
-        return f"User(name={self.name}, email={self.email}, user_id={self.user_id}, state={self.state})"
+        except ValueError:
+            raise ValueError("Invalid format for user id")
+        
+        return v
