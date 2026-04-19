@@ -34,7 +34,6 @@ class Test_CreateUserCognitoController:
         }
 
     def test_create_user_cognito_controller_user_role(self):
-        os.environ["USER_POOL_ID"] = "us-east-1_xxxxxx"
         usecase = SpyUsecase()
         controller = CreateUserCognitoController(usecase=usecase)
 
@@ -49,22 +48,7 @@ class Test_CreateUserCognitoController:
         assert usecase.calls[0]["role"] == ROLE.USER
         assert usecase.calls[0]["height"] == 1.8
 
-    def test_create_user_cognito_controller_wrong_user_pool(self):
-        os.environ["USER_POOL_ID"] = "us-east-1_xxxxxx"
-        usecase = SpyUsecase()
-        controller = CreateUserCognitoController(usecase=usecase)
-
-        event = self._base_event()
-        event["userPoolId"] = "us-east-1_yyyyyy"
-
-        response = controller(event)
-
-        assert response.status_code == 403
-        assert response.body == "That action is forbidden for this user_pool_id"
-        assert len(usecase.calls) == 0
-
     def test_create_user_cognito_controller_missing_height_for_user(self):
-        os.environ["USER_POOL_ID"] = "us-east-1_xxxxxx"
         usecase = SpyUsecase()
         controller = CreateUserCognitoController(usecase=usecase)
 
@@ -77,7 +61,6 @@ class Test_CreateUserCognitoController:
         assert response.body == "Field height is missing"
 
     def test_create_user_cognito_controller_invalid_role(self):
-        os.environ["USER_POOL_ID"] = "us-east-1_xxxxxx"
         usecase = SpyUsecase()
         controller = CreateUserCognitoController(usecase=usecase)
 
@@ -90,7 +73,6 @@ class Test_CreateUserCognitoController:
         assert response.body == "Field role isn't in the right type.\n Received: MANAGER.\n Expected: one of ['ADM', 'USER', 'SUPPORT']"
 
     def test_create_user_cognito_controller_admin_forbidden(self):
-        os.environ["USER_POOL_ID"] = "us-east-1_xxxxxx"
         usecase = SpyUsecase()
         controller = CreateUserCognitoController(usecase=usecase)
 
@@ -103,7 +85,6 @@ class Test_CreateUserCognitoController:
         assert response.body == "That action is forbidden for this administrator role"
 
     def test_create_user_cognito_controller_ignore_other_trigger_source(self):
-        os.environ["USER_POOL_ID"] = "us-east-1_xxxxxx"
         usecase = SpyUsecase()
         controller = CreateUserCognitoController(usecase=usecase)
 

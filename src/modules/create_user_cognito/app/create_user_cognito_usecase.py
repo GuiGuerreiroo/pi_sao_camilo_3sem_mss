@@ -1,3 +1,4 @@
+from src.shared.helpers.errors.usecase_errors import ForbiddenAction
 from src.shared.domain.entities.user import User
 from src.shared.domain.enums.role_enum import ROLE
 from src.shared.domain.repositories.user_repository_interface import IUserRepository
@@ -38,6 +39,6 @@ class CreateUserCognitoUseCase:
                     )
 
         if not user:
-            raise Exception
+            raise Exception("Invalid Role provided for user creation")
 
         self.repo.create_user(user)

@@ -14,7 +14,9 @@ def lambda_handler(event, contex):
     response= controller(event)
 
     if response and hasattr(response, 'status_code') and response.status_code >= 400:
-        print(f"Something went wrong while creating user in dyanamoDB: {response.body}")
+       error_msg = f"Failed to create user in DynamoDB: {response.body}"
+       print(error_msg)
+       raise Exception(error_msg)
 
     print("Registered with success")
     return event

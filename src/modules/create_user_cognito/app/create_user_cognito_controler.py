@@ -15,11 +15,6 @@ class CreateUserCognitoController:
 
     def __call__(self, event: dict):
         try:
-            request_user_pool_id= event.get('userPoolId')
-
-            if request_user_pool_id != Environments.get_envs().user_pool_id:
-                raise ForbiddenAction("user_pool_id")
-            
             if event.get('triggerSource') != "PostConfirmation_ConfirmSignUp": 
                 return
             
