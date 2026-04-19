@@ -86,10 +86,12 @@ class UserRepositoryDynamo(IUserRepository):
             filter_expression= filter_exp
         )
 
-        if not items:
+        item= items.get("Items", [])
+
+        if not item:
             return None
 
-        item= items.get("Items", [])[0]
+        item= item[0]
 
         item['user_id']= self.remove_prefix(item['user_id'])
 
