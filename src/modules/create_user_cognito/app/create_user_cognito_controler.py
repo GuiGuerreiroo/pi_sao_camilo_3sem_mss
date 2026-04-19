@@ -118,4 +118,4 @@ class CreateUserCognitoController:
             return Forbidden(body=err.message)
 
         except Exception as err:
-            return InternalServerError(body=err.args[0])
+            return InternalServerError(body=str(err))
