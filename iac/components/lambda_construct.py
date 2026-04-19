@@ -83,13 +83,15 @@ class LambdaConstruct(Construct):
             environment_variables=environment_variables
         )
 
-
-
-
-
-
-
+        self.get_user_function= self.create_lambda_api_gateway_integration(
+            module_name="get_user",
+            method="GET",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
 
         self.functions_that_need_db_access= [
-            self.create_user_cognito_function
+            self.create_user_cognito_function,
+            self.get_user_function
         ]
