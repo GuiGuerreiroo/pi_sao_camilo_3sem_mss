@@ -35,6 +35,7 @@ class DynamoConstruct(Construct):
         self.sao_camilo_table= dynamodb.Table(
             self,
             "ProjetoNutriesportivaSaoCamilo_Table",
+            table_name=f"{self.SAO_CAMILO_TABLE_NAME}-{stage}",
             partition_key=dynamodb.Attribute(
                 name= "PK",
                 type= dynamodb.AttributeType.STRING

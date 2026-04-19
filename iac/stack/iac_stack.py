@@ -21,7 +21,7 @@ class IacStack(Stack):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        stage= kwargs['tags']['stage']
+        stage = os.environ.get("GITHUB_REF_NAME", "dev")
 
         self.apigw_construct= ApigwConstruct(self, "Apigw")
         self.dynamo_construct= DynamoConstruct(self, "NutriDynamo")

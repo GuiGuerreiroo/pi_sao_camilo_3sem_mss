@@ -1,5 +1,5 @@
 from aws_cdk import (
-    RemovalPolicy, aws_cognito as cognito, RemovalPolicies, Duration
+    RemovalPolicy, aws_cognito as cognito, Duration
 )
 import os
 from constructs import Construct
@@ -21,7 +21,8 @@ class CognitoConstruct(Construct):
 
         self.user_pool= cognito.UserPool(
             self,
-            f"Projeto Nutri Esportiva Sao Camilo",
+            f"ProjetoNutriEsportivaSaoCamiloUserPool",
+            user_pool_name=f"nutri-esportiva-pool-{self.github_ref_name}",
             self_sign_up_enabled=True,
             sign_in_aliases= cognito.SignInAliases(email=True),
             auto_verify= cognito.AutoVerifiedAttrs(email=True),
@@ -52,7 +53,8 @@ class CognitoConstruct(Construct):
         )
 
         self.client= self.user_pool.add_client(
-            f"projeto_nutri_esportiva_sao_camilo{self.github_ref_name}",
+            f"ProjetoNutriEsportivaSaoCamiloAppClient",
+            user_pool_client_name=f"nutri-esportiva-client-{self.github_ref_name}",
             auth_flows= cognito.AuthFlow(
                 admin_user_password= True,
                 user_password= True,
