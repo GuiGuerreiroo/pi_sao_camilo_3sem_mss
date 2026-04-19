@@ -26,7 +26,7 @@ class CognitoConstruct(Construct):
             self_sign_up_enabled=True,
             sign_in_aliases= cognito.SignInAliases(email=True),
             auto_verify= cognito.AutoVerifiedAttrs(email=True),
-            auto_recovery= cognito.AccountRecovery.EMAIL_ONLY,
+            account_recovery= cognito.AccountRecovery.EMAIL_ONLY,
             password_policy= cognito.PasswordPolicy(
                 min_length=8,
                 require_lowercase=True,
