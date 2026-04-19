@@ -31,7 +31,9 @@ class IacStack(Stack):
         ENVIRONMENT_VARIABLES= {
             "STAGE": stage,
             "REGION": self.region,
-            "SAO_CAMILO_TABLE_NAME": self.dynamo_construct.sao_camilo_table.table_name
+            "SAO_CAMILO_TABLE_NAME": self.dynamo_construct.sao_camilo_table.table_name,
+            "DYNAMO_PARTITION_KEY": self.dynamo_construct.PARTITION_KEY_NAME,
+            "DYNAMO_SORT_KEY": self.dynamo_construct.SORT_KEY_NAME
         }
         
         self.cognito_construct= CognitoConstruct(self, "SaoCamiloUserPool")

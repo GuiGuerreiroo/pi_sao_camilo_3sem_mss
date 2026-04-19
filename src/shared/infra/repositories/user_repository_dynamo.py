@@ -103,7 +103,7 @@ class UserRepositoryDynamo(IUserRepository):
         return user
 
     def create_user(self, new_user: User) -> Optional[User]:
-        item= new_user.model_dump_json()
+        item= new_user.model_dump_json(exclude_none=True)
         item= json.loads(item)
 
         self.dynamo.put_item(

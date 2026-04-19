@@ -7,6 +7,8 @@ from aws_cdk import (
 class DynamoConstruct(Construct):
     sao_camilo_table: dynamodb.Table
     SAO_CAMILO_TABLE_NAME: str= "ProjetoNutriEsportivaSaoCamiloTable"
+    PARTITION_KEY_NAME: str = "PK"
+    SORT_KEY_NAME: str = "SK"
     
     def __init__(
         self, 
@@ -37,11 +39,11 @@ class DynamoConstruct(Construct):
             "ProjetoNutriesportivaSaoCamilo_Table",
             table_name=f"{self.SAO_CAMILO_TABLE_NAME}-{stage}",
             partition_key=dynamodb.Attribute(
-                name= "PK",
+                name= self.PARTITION_KEY_NAME,
                 type= dynamodb.AttributeType.STRING
             ),
             sort_key=dynamodb.Attribute(
-                name= "SK",
+                name= self.SORT_KEY_NAME,
                 type= dynamodb.AttributeType.STRING
             ),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
