@@ -34,10 +34,10 @@ else:
     stage = 'TEST'
 
 tags = {
-    'project': 'PortalEntidades',
+    'project': 'ProjetoNutriEsportivaSaoCamilo',
     'stage': stage,
     'stack': 'BACK',
-    'owner': 'DevCommunity'
+    'owner': 'GuilhermeGuerreiroo'
 }
 
 IacStack(
