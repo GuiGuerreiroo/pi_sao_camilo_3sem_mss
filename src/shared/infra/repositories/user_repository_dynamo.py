@@ -1,6 +1,7 @@
 from decimal import Decimal
 import json
 from typing import List, Optional
+from boto3.dynamodb.conditions import Attr
 
 from src.shared.domain.entities.user import User
 from src.shared.domain.enums.role_enum import ROLE
@@ -63,9 +64,12 @@ class UserRepositoryDynamo(IUserRepository):
 
         item["Item"]["user_id"]= self.remove_prefix(item["Item"]["user_id"])
 
-        item= User.model_validate(item["Item"])
+        item["Item"].pop("PK", None)
+        item["Item"].pop("SK", None)
 
-        return item
+        user= User.model_validate(item["Item"])
+
+        return user
     
     # for now I don't need this method
     # def get_all_user(self) -> List[User]:
@@ -74,20 +78,23 @@ class UserRepositoryDynamo(IUserRepository):
     #     return users
 
     def get_user_by_email(self, email: str) -> Optional[User]:
-        filter_expression= "email = :email"
-        expression_attribute_values= {":email": email}
+        # filter_expression= f"email = :email"
+        # expression_attribute_values= {":email": email}
+        filter_exp = Attr('email').eq(email)
 
         items= self.dynamo.scan_items(
-            filter_expression= filter_expression,
-            expression_attribute_values= expression_attribute_values
+            filter_expression= filter_exp
         )
 
         if not items:
             return None
 
-        item= items[0]
+        item= items.get("Items", [])[0]
 
-        item["user_id"]= self.remove_prefix(item["user_id"])
+        item['user_id']= self.remove_prefix(item['user_id'])
+
+        item.pop("PK", None)
+        item.pop("SK", None)
 
         user= User.model_validate(item)
 
@@ -160,6 +167,9 @@ class UserRepositoryDynamo(IUserRepository):
 
 
         updated_user["user_id"]= self.remove_prefix(updated_user["user_id"])
+
+        updated_user.pop("PK", None)
+        updated_user.pop("SK", None)
 
         updated_user= User.model_validate(updated_user)
 
