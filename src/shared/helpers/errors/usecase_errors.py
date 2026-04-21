@@ -19,3 +19,7 @@ class IsNotInstanceOfUuid4(BaseError):
 class UnconfirmedUserError(BaseError):
     def __init__(self, message: str):
         super().__init__(f'The user {message} is unconfirmed. A new verification code was sent.')
+
+class UserExpiredError(BaseError):
+    def __init__(self, message: str = "Seu tempo de ativação expirou por segurança. Por favor, cadastre-se novamente."):
+        super().__init__(message)
