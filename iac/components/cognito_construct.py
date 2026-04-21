@@ -44,7 +44,7 @@ class CognitoConstruct(Construct):
                 email_body=(
                     "Olá!\n\nObrigado por se registrar no Nutri Esportiva São Camilo.\n\n"
                     "O código para verificar seu e-mail e ativar sua conta é:\n\n"
-                    "{######}\n\n"
+                    "{####}\n\n"
                     "Se você não se registrou no Nutri Esportiva São Camilo, por favor ignore este e-mail."
                 ),
                 email_style=cognito.VerificationEmailStyle.CODE,
