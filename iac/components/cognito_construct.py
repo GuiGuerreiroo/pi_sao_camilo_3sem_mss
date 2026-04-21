@@ -39,6 +39,9 @@ class CognitoConstruct(Construct):
                 email= cognito.StandardAttribute(required=True, mutable=False),
                 fullname= cognito.StandardAttribute(required=True, mutable=True),
             ),
+            custom_attributes={
+                "role": cognito.StringAttribute(min_len=3, max_len=10, mutable=True)
+            },
             user_verification=cognito.UserVerificationConfig(
                 email_subject="Bem vindo ao sistema de autenticação Nutri Esportiva São Camilo",
                 email_body=(

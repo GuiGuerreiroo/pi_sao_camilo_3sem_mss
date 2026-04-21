@@ -32,9 +32,16 @@ class Test_CreateUserUsecase:
         assert user.name == "Vitor Choueri"
         assert user.email == "branco@branco.branco"
         assert user.role == ROLE.USER
-        usecase.cognito.sign_up.assert_called_once()
-
-    def test_create_user_invalid_name(self):
+        usecase.cognito.sign_up.assert_called_once_with(
+            ClientId=usecase.client_id,
+            Username="branco@branco.branco",
+            Password="Password123!",
+            UserAttributes=[
+                {'Name': 'name', 'Value': 'Vitor Choueri'},
+                {'Name': 'email', 'Value': 'branco@branco.branco'},
+                {'Name': 'custom:role', 'Value': ROLE.USER.value}
+            ]
+        )
         repo = UserRepositoryMock()
         usecase = CreateUserUseCase(repo=repo)
         
