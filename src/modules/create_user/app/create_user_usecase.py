@@ -48,6 +48,26 @@ class CreateUserUseCase:
                     ClientId=self.client_id,
                     Username=email
                 )
+
+                attributes = user_data.get('UserAttributes', [])
+                cognito_user_id = next((attr['Value'] for attr in attributes if attr['Name'] == 'sub'), None)
+
+                new_future_time = int(time.time()) + (24 * 3600)
+
+                recovered_user = User(
+                    user_id=cognito_user_id,
+                    name=name,
+                    email=email,
+                    role=role,
+                    height=height,
+                    status=USERSTATUS.UNCONFIRMED,
+                    expires_at=new_future_time
+                )
+
+                # recria o usuario em caso de ele ter sida apagado, por conta do tempo ter sido expirado ou somente subscreve o tempo de expiracao do usuario ja presente no dynamo
+                self.repo.create_user(recovered_user)
+
+
                 raise UnconfirmedUserError(email)
          
             else:

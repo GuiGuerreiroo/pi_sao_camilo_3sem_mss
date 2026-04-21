@@ -50,9 +50,12 @@ class CreateUserController:
                 raise WrongTypeParameter("role", f"one of {[role.name for role in ROLE]}", role_str
                 )
 
-            height= request.data.get('height')
+            if role_enum == ROLE.USER:  
+                height= request.data.get('height')
 
-            if height:
+                if height is None:
+                    raise MissingParameters('height')
+
                 if not isinstance(height, float):
                     raise WrongTypeParameter('height', 'float', type(height))
 
