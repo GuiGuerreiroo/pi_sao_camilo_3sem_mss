@@ -30,7 +30,7 @@ class Environments:
     dynamo_sort_key: str
     cloud_front_distribution_domain: str
     mss_name: str
-    user_pool_id: str
+    cognito_client_id: str
 
     def _configure_local(self):
         from dotenv import load_dotenv
@@ -52,6 +52,8 @@ class Environments:
             self.dynamo_partition_key = "PK"
             self.dynamo_sort_key = "SK"
             self.cloud_front_distribution_domain = "https://d3q9q9q9q9q9q9.cloudfront.net"
+            self.cognito_client_id= "n7m2p9sk18va45gtzxwy02ub61"
+            self.cognito_user_pool_id= "us-east-XXXXXXX"
 
         else:
             self.s3_bucket_name = os.environ.get("S3_BUCKET_NAME")
@@ -61,6 +63,8 @@ class Environments:
             self.dynamo_partition_key = os.environ.get("DYNAMO_PARTITION_KEY")
             self.dynamo_sort_key = os.environ.get("DYNAMO_SORT_KEY")
             self.cloud_front_distribution_domain = os.environ.get("CLOUD_FRONT_DISTRIBUTION_DOMAIN")
+            self.cognito_client_id=os.environ.get("COGNITO_CLIENT_ID")
+            self.cognito_user_pool_id=os.environ.get("COGNITO_USER_POOL_ID")
 
     @staticmethod
     def get_user_repo() -> IUserRepository:

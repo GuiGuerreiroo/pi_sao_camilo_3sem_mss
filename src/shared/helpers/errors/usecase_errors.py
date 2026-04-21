@@ -15,3 +15,7 @@ class ForbiddenAction(BaseError):
 class IsNotInstanceOfUuid4(BaseError):
     def __init(self, message: str):
         super().__init__(f'the {message} is not an instance of uuid4')
+
+class UnconfirmedUserError(BaseError):
+    def __init__(self, message: str):
+        super().__init__(f'The user {message} is unconfirmed. A new verification code was sent.')
