@@ -106,7 +106,8 @@ class Test_CreateUserControler:
             'email': 'branco@branco.com',
             'name': 'B',  # Name < 2 chars throws ValidationError
             'password': 'Password123!',
-            'role': 'USER'
+            'role': 'USER',
+            'height': 1.80
         })
 
         response = controller(request=request)
@@ -124,7 +125,8 @@ class Test_CreateUserControler:
             'email': 'branco@branco.com',
             'name': 'Branco',
             'password': 123456,
-            'role': 'USER'
+            'role': 'USER',
+            'height': 1.80
         })
 
         response = controller(request=request)
@@ -145,7 +147,8 @@ class Test_CreateUserControler:
             'email': 'branco@branco.com',
             'name': 'Branco do Branco Branco da Silva',
             'password': 'Password123!',
-            'role': 'USER'
+            'role': 'USER',
+            'height': 1.80
         })
 
         response = controller(request=request)
@@ -166,7 +169,8 @@ class Test_CreateUserControler:
             'email': 'branco@branco.com',
             'name': 'Branco do Branco Branco da Silva',
             'password': 'Password123!',
-            'role': 'USER'
+            'role': 'USER',
+            'height': 1.80
         })
 
         response = controller(request=request)

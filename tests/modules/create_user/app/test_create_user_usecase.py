@@ -85,7 +85,10 @@ class Test_CreateUserUsecase:
         usecase.cognito.sign_up.side_effect = ExceptionClass("User already exists")
         
         usecase.cognito.admin_get_user.return_value = {
-            'UserStatus': 'UNCONFIRMED'
+            'UserStatus': 'UNCONFIRMED',
+            'UserAttributes': [
+                {'Name': 'sub', 'Value': str(uuid.uuid4())}
+            ]
         }
 
         with pytest.raises(UnconfirmedUserError):
