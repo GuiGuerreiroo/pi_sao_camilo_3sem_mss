@@ -42,24 +42,24 @@ class LambdaConstruct(Construct):
         return function
     
 
-    def create_background_lambda(
-        self,
-        module_name: str,
-        environment_variables: dict
-    ):
-        function= lambda_.Function(
-            self,
-            module_name.title(),
-            function_name=f"pnesc-{module_name}",
-            code=lambda_.Code.from_asset(f"../src/modules/{module_name}"),
-            handler=f"app.{module_name}_presenter.lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_13,
-            layers=[self.lambda_layer],
-            environment=environment_variables,
-            timeout=Duration.seconds(35)
-        )
+    # def create_background_lambda(
+    #     self,
+    #     module_name: str,
+    #     environment_variables: dict
+    # ):
+    #     function= lambda_.Function(
+    #         self,
+    #         module_name.title(),
+    #         function_name=f"pnesc-{module_name}",
+    #         code=lambda_.Code.from_asset(f"../src/modules/{module_name}"),
+    #         handler=f"app.{module_name}_presenter.lambda_handler",
+    #         runtime=lambda_.Runtime.PYTHON_3_13,
+    #         layers=[self.lambda_layer],
+    #         environment=environment_variables,
+    #         timeout=Duration.seconds(35)
+    #     )
 
-        return function
+    #     return function
     
     def __init__(
         self,
@@ -80,9 +80,41 @@ class LambdaConstruct(Construct):
             compatible_runtimes=[lambda_.Runtime.PYTHON_3_13]
         )
 
-        self.create_user_cognito_function= self.create_background_lambda(
-            module_name="create_user_cognito",
+        # self.create_user_cognito_function= self.create_background_lambda(
+        #     module_name="create_user_cognito",
+        #     environment_variables=environment_variables
+        # )
+
+        self.auth_user_function= self.create_lambda_api_gateway_integration(
+            module_name="auth_user",
+            method="POST",
+            mss_api_resource=apigateway_resource,
             environment_variables=environment_variables
+            # essa rota nao tem authorizer
+        )
+
+        self.create_user= self.create_lambda_api_gateway_integration(
+            module_name="create_user",
+            method="POST",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables
+            # essa rota nao tem authorizer
+        )
+
+        self.refresh_token= self.create_lambda_api_gateway_integration(
+            module_name="refresh_token",
+            method="POST",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables
+             # essa rota nao tem authorizer
+        )
+
+        self.confirm_user = self.create_lambda_api_gateway_integration(
+            module_name="confirm_user",
+            method="POST",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables
+            # essa rota nao tem authorizer
         )
 
         self.get_user_function= self.create_lambda_api_gateway_integration(
@@ -94,6 +126,14 @@ class LambdaConstruct(Construct):
         )
 
         self.functions_that_need_db_access= [
-            self.create_user_cognito_function,
-            self.get_user_function
+            self.create_user,
+            self.get_user_function,
+            self.confirm_user
+        ]
+
+        self.functions_that_need_cognito_iam_policy= [
+            self.create_user,
+            self.auth_user_function,
+            self.refresh_token,
+            self.confirm_user
         ]

@@ -46,6 +46,7 @@ class DynamoConstruct(Construct):
                 name= self.SORT_KEY_NAME,
                 type= dynamodb.AttributeType.STRING
             ),
+            time_to_live_atribute= "expires_at",
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=removal_policy,
             point_in_time_recovery=True if stage == 'PROD' else False
