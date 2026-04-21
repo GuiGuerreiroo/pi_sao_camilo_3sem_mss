@@ -43,3 +43,18 @@ class Test_ResendCodeUseCase:
             UserPoolId=usecase.user_pool_id,
             Username=email
         )
+
+    def test_resend_code_user_already_confirmed(self):
+        from src.shared.helpers.errors.usecase_errors import UserAlreadyConfirmedError
+        repo = UserRepositoryMock()
+        usecase = ResendCodeUseCase(repo=repo)
+        
+        usecase.cognito = MagicMock()
+
+        # Guilherme is CONFIRMED in the mock DB
+        email = "25.00178-5@maua.br"
+        
+        with pytest.raises(UserAlreadyConfirmedError):
+            usecase(email=email)
+            
+        usecase.cognito.resend_confirmation_code.assert_not_called()

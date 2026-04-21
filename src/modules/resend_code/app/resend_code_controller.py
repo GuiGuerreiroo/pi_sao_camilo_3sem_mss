@@ -1,7 +1,7 @@
 from src.shared.helpers.external_interfaces.external_interface import IRequest, IResponse
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
-from src.shared.helpers.errors.usecase_errors import NoItemsFound, UserExpiredError
-from src.shared.helpers.external_interfaces.http_codes import OK, NotFound, BadRequest, InternalServerError, Gone
+from src.shared.helpers.errors.usecase_errors import NoItemsFound, UserExpiredError, UserAlreadyConfirmedError
+from src.shared.helpers.external_interfaces.http_codes import OK, NotFound, BadRequest, InternalServerError, Gone, Forbidden
 from .resend_code_usecase import ResendCodeUseCase
 
 class ResendCodeController:
@@ -41,6 +41,9 @@ class ResendCodeController:
 
         except UserExpiredError as err:
             return Gone(body=err.message)
+
+        except UserAlreadyConfirmedError as err:
+            return Forbidden(body=err.message)
 
         except Exception as err:
             return InternalServerError(body=str(err))

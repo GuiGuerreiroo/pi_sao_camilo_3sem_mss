@@ -23,3 +23,7 @@ class UnconfirmedUserError(BaseError):
 class UserExpiredError(BaseError):
     def __init__(self, message: str = "Seu tempo de ativação expirou por segurança. Por favor, cadastre-se novamente."):
         super().__init__(message)
+
+class UserAlreadyConfirmedError(BaseError):
+    def __init__(self, message: str = "Usuário já foi confirmado."):
+        super().__init__(message)

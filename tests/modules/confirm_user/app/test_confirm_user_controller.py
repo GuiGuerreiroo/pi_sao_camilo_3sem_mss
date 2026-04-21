@@ -27,7 +27,7 @@ class Test_ConfirmUserController:
         assert response.status_code == 200
         assert response.body['message'] == 'Conta ativada com sucesso!'
         assert response.body['user']['status'] == USERSTATUS.CONFIRMED.value
-        assert response.body['user']['expires_at'] is None
+        assert 'expires_at' not in response.body['user']
 
     def test_confirm_user_controller_missing_email(self):
         repo = UserRepositoryMock()

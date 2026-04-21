@@ -1,4 +1,5 @@
-from src.shared.helpers.errors.usecase_errors import UserExpiredError
+from src.shared.domain.enums.status_user_enum import USERSTATUS
+from src.shared.helpers.errors.usecase_errors import UserExpiredError, UserAlreadyConfirmedError
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
 from botocore.exceptions import ClientError
 import boto3
@@ -20,7 +21,7 @@ class ResendCodeUseCase:
     ):
         user = self.repo.get_user_by_email(email)
 
-        if user:
+        if user and user.status == USERSTATUS.UNCONFIRMED:
             try:
                 self.cognito.resend_confirmation_code(
                     ClientId=self.client_id,
@@ -30,6 +31,9 @@ class ResendCodeUseCase:
 
             except ClientError as e:
                 raise e
+        
+        elif user and user.status == USERSTATUS.CONFIRMED:
+            raise UserAlreadyConfirmedError()
 
         else:
             try:
