@@ -27,16 +27,18 @@ class IacStack(Stack):
 
         self.dynamo_construct= DynamoConstruct(self, "NutriDynamo")
 
+        self.cognito_construct= CognitoConstruct(self, "SaoCamiloUserPool")
 
         ENVIRONMENT_VARIABLES= {
             "STAGE": stage,
             "REGION": self.region,
             "SAO_CAMILO_TABLE_NAME": self.dynamo_construct.sao_camilo_table.table_name,
             "DYNAMO_PARTITION_KEY": self.dynamo_construct.PARTITION_KEY_NAME,
-            "DYNAMO_SORT_KEY": self.dynamo_construct.SORT_KEY_NAME
+            "DYNAMO_SORT_KEY": self.dynamo_construct.SORT_KEY_NAME,
+            "COGNITO_CLIENT_ID": self.cognito_construct.client.user_pool_client_id,
+            "COGNITO_USER_POOL_ID": self.cognito_construct.user_pool.user_pool_id
         }
         
-        self.cognito_construct= CognitoConstruct(self, "SaoCamiloUserPool")
 
         api_authorizer= apigw.CognitoUserPoolsAuthorizer(
             self,
@@ -54,11 +56,24 @@ class IacStack(Stack):
         )
 
         # adicionar a lambda a ser acionada apos a criacao do user no userpool, para fazer sue registro no Banco de dados.
-        self.cognito_construct.user_pool.add_trigger(
-            cognito.UserPoolOperation.POST_CONFIRMATION,
-            self.lambda_construct.create_user_cognito_function
+        # self.cognito_construct.user_pool.add_trigger(
+        #     cognito.UserPoolOperation.POST_CONFIRMATION,
+        #     self.lambda_construct.create_user_cognito_function
+        # )
+
+        # politica de IAM para permitir a lambda usar o cognito
+        cognito_policy = iam.PolicyStatement(
+            actions=[
+                "cognito-idp:SignUp",
+                "cognito-idp:InitiateAuth",
+                "cognito-idp:AdminInitiateAuth",
+                "cognito-idp:ConfirmSignUp" 
+            ],
+            resources=["*"]
         )
 
+        for fn in self.lambda_construct.functions_that_need_cognito_iam_policy:
+            fn.add_to_role_policy(cognito_policy)
 
         for fn in self.lambda_construct.functions_that_need_db_access:
             self.dynamo_construct.sao_camilo_table.grant_read_write_data(fn)

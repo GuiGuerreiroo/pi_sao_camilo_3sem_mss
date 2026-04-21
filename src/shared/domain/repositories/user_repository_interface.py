@@ -50,3 +50,8 @@ class IUserRepository(ABC):
         If user not found return None
         """
         pass
+    
+    @abstractmethod
+    def confirm_user_registration(self, email: str) -> Optional[User]:
+        """Changes user status to CONFIRMED and removes the TTL timer"""
+        pass

@@ -3,6 +3,7 @@ import uuid
 import pytest
 from src.shared.domain.entities.user import User
 from src.shared.domain.enums.role_enum import ROLE
+from src.shared.domain.enums.status_user_enum import USERSTATUS
 from src.shared.infra.repositories.user_repository_dynamo import UserRepositoryDynamo
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 
@@ -102,3 +103,27 @@ class Test_UserRepositoryDynamo:
 
         assert resp is not None
         assert resp.name == "Vitor Soller Soller"
+
+    @pytest.mark.skip(reason="Needs dynamoDB")
+    def test_confirm_user_registration(self):
+        os.environ["STAGE"] = "TEST"
+
+        user_repository = UserRepositoryDynamo()
+        user_to_confirm = User(
+            user_id=str(uuid.uuid4()),
+            name="Test Dynamo Confirm",
+            email="test.dynamo.confirm@maua.br",
+            role=ROLE.USER,
+            status=USERSTATUS.UNCONFIRMED,
+            expires_at=1234567890
+        )
+        user_repository.create_user(user_to_confirm)
+
+        resp = user_repository.confirm_user_registration(user_to_confirm.email)
+
+        assert resp is not None
+        assert resp.status == USERSTATUS.CONFIRMED
+        assert resp.expires_at is None
+
+        # Clean up
+        user_repository.delete_user(user_to_confirm.user_id)

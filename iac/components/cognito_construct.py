@@ -43,11 +43,11 @@ class CognitoConstruct(Construct):
                 email_subject="Bem vindo ao sistema de autenticação Nutri Esportiva São Camilo",
                 email_body=(
                     "Olá!\n\nObrigado por se registrar no Nutri Esportiva São Camilo.\n\n"
-                    "Clique no link abaixo para verificar seu e-mail e ativar sua conta:\n\n"
-                    "{##Verify Email##}\n\n"
+                    "O código para verificar seu e-mail e ativar sua conta é:\n\n"
+                    "{######}\n\n"
                     "Se você não se registrou no Nutri Esportiva São Camilo, por favor ignore este e-mail."
                 ),
-                email_style=cognito.VerificationEmailStyle.LINK,
+                email_style=cognito.VerificationEmailStyle.CODE,
             ),
             removal_policy=REMOVAL_POLICY,
         )
