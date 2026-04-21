@@ -32,7 +32,7 @@ class CreateUserUseCase:
                 UserAttributes=[
                     {'Name': 'name', 'Value': name},
                     {'Name': 'email', 'Value': email},
-                    {'Name': 'custom:role', 'Value': role.value}
+                    {'Name': 'role', 'Value': role.value}
                 ]
             )
             user_id= response['UserSub']
