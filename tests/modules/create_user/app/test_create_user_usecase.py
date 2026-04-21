@@ -73,34 +73,3 @@ class Test_CreateUserUsecase:
                 role=ROLE.USER,
                 height=1.80
             )
-
-    def test_create_user_unconfirmed(self):
-        from src.shared.helpers.errors.usecase_errors import UnconfirmedUserError
-        repo = UserRepositoryMock()
-        usecase = CreateUserUseCase(repo=repo)
-        
-        usecase.cognito = MagicMock()
-        ExceptionClass = type('UsernameExistsException', (Exception,), {})
-        usecase.cognito.exceptions.UsernameExistsException = ExceptionClass
-        usecase.cognito.sign_up.side_effect = ExceptionClass("User already exists")
-        
-        usecase.cognito.admin_get_user.return_value = {
-            'UserStatus': 'UNCONFIRMED',
-            'UserAttributes': [
-                {'Name': 'sub', 'Value': str(uuid.uuid4())}
-            ]
-        }
-
-        with pytest.raises(UnconfirmedUserError):
-            usecase(
-                name="Vitor Choueri", 
-                email="branco@branco.branco",
-                password="Password123!",
-                role=ROLE.USER,
-                height=1.80
-            )
-        
-        usecase.cognito.resend_confirmation_code.assert_called_once_with(
-            ClientId=usecase.client_id,
-            Username="branco@branco.branco"
-        )

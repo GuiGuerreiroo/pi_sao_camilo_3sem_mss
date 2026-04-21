@@ -13,7 +13,6 @@ class CreateUserUseCase:
         self.repo= repo
 
         self.client_id= Environments.get_envs().cognito_client_id
-        self.user_pool_id = Environments.get_envs().cognito_user_pool_id
         self.region= Environments.get_envs().region
         self.cognito= boto3.client('cognito-idp', region_name= self.region)
 
@@ -38,40 +37,7 @@ class CreateUserUseCase:
             user_id= response['UserSub']
 
         except self.cognito.exceptions.UsernameExistsException:
-            user_data = self.cognito.admin_get_user(
-                UserPoolId=self.user_pool_id, 
-                Username=email
-            )
-            
-            if user_data.get('UserStatus') == 'UNCONFIRMED':
-                self.cognito.resend_confirmation_code(
-                    ClientId=self.client_id,
-                    Username=email
-                )
-
-                attributes = user_data.get('UserAttributes', [])
-                cognito_user_id = next((attr['Value'] for attr in attributes if attr['Name'] == 'sub'), None)
-
-                new_future_time = int(time.time()) + (24 * 3600)
-
-                recovered_user = User(
-                    user_id=cognito_user_id,
-                    name=name,
-                    email=email,
-                    role=role,
-                    height=height,
-                    status=USERSTATUS.UNCONFIRMED,
-                    expires_at=new_future_time
-                )
-
-                # recria o usuario em caso de ele ter sida apagado, por conta do tempo ter sido expirado ou somente subscreve o tempo de expiracao do usuario ja presente no dynamo
-                self.repo.create_user(recovered_user)
-
-
-                raise UnconfirmedUserError(email)
-         
-            else:
-                raise DuplicatedItem(email)
+            raise DuplicatedItem(email)
 
         except ClientError as e:
             raise e

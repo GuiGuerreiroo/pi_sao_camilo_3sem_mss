@@ -1,7 +1,5 @@
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
 from botocore.exceptions import ClientError
-
-from typing import Dict, Any
 import boto3
 from src.shared.environments import Environments
 from src.shared.domain.repositories.user_repository_interface import IUserRepository
