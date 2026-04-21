@@ -68,7 +68,7 @@ class CreateUserController:
             )
 
             viewmodel = {
-                'user': user.model_dump(mode='json'),
+                'user': user.model_dump(mode='json', exclude_none=True),
                 'message': 'User successfully created'
             }
 

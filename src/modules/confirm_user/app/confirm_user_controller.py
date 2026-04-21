@@ -35,7 +35,7 @@ class ConfirmUserController:
             )
 
             viewmodel = {
-                'user': result.model_dump(mode='json'),
+                'user': result.model_dump(mode='json', exclude_none=True),
                 'message': 'Conta ativada com sucesso!'
             }
 
