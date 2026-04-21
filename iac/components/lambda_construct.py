@@ -117,6 +117,14 @@ class LambdaConstruct(Construct):
             # essa rota nao tem authorizer
         )
 
+        self.resend_code= self.create_lambda_api_gateway_integration(
+            module_name="resend_code",
+            method="POST",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables
+            # essa rota nao tem authorizer
+        )
+
         self.get_user_function= self.create_lambda_api_gateway_integration(
             module_name="get_user",
             method="GET",
@@ -128,12 +136,14 @@ class LambdaConstruct(Construct):
         self.functions_that_need_db_access= [
             self.create_user,
             self.get_user_function,
-            self.confirm_user
+            self.confirm_user,
+            self.resend_code
         ]
 
         self.functions_that_need_cognito_iam_policy= [
             self.create_user,
             self.auth_user_function,
             self.refresh_token,
-            self.confirm_user
+            self.confirm_user,
+            self.resend_code
         ]
