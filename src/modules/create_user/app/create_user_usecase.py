@@ -43,7 +43,7 @@ class CreateUserUseCase:
             raise e
 
         # just for test latter should be 24 hours
-        future_time = int(time.time()) - 3600
+        future_time = int(time.time()) + (24 * 60 * 60)
 
         user= User(
             user_id= user_id,
