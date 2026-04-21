@@ -2,6 +2,7 @@ import uuid
 from pydantic import *
 
 from src.shared.domain.enums.role_enum import ROLE
+from src.shared.domain.enums.status_user_enum import USERSTATUS
 
 class User(BaseModel):
     user_id: str= Field(
@@ -23,9 +24,19 @@ class User(BaseModel):
         default=ROLE.USER
     )
 
+    status: USERSTATUS= Field(
+        description="Status do usuário em relação ao Cognito",
+        default= USERSTATUS.UNCONFIRMED
+    ) 
+
     height: float | None= Field(
         description="Altrura do usuário (M)",
         default=None
+    )
+
+    expires_at: int | None= Field (
+        description="",
+        default= None
     )
 
     # weight: float | None= Field(

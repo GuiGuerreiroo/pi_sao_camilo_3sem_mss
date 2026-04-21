@@ -84,32 +84,70 @@ class DynamoDatasource:
         resp = self.dynamo_table.put_item(Item=DynamoDatasource._parse_float_to_decimal(item))
         return resp
 
-    def update_item(self, partition_key: str, sort_key: str, update_dict: dict):
+    # def update_item(self, partition_key: str, sort_key: str, update_dict: dict):
+    #     """
+    #     Update an item in the table with its keys (Partition and Sort) and attributes to update
+    #     If the attribute does not exist, it will be created. It won't change attributes not mentioned.
+    #     @param key: dict with the keys (Partition and Sort)
+    #     @param update_attributes: dict with the attributes to update
+    #     @return: dict with the response from DynamoDB
+    #     """
+
+    #     data_key_value_pairs = list(update_dict.items())
+
+    #     update_expression = "SET " + ", ".join([f"#attr{i} = :val{i}" for i in range(len(data_key_value_pairs))]) # SET attribute1=:value1, attribute2=:value2
+    #     expression_attribute_names = {f"#attr{i}": data_key_value_pairs[i][0] for i in range(len(data_key_value_pairs))} # {"_attribute1": "attribute1", ":_attribute2": "attribute2"}
+    #     expression_value_names = {f":val{i}": data_key_value_pairs[i][1] for i in range(len(data_key_value_pairs))} # {":value1": "value1", ":value2": "value2"}
+
+    #     resp = self.dynamo_table.update_item(
+    #         Key={
+    #             self.partition_key: partition_key,
+    #             self.sort_key: sort_key
+    #         },
+    #         UpdateExpression=update_expression,
+    #         ExpressionAttributeNames=expression_attribute_names,
+    #         ExpressionAttributeValues=expression_value_names,
+    #         ReturnValues="ALL_NEW"
+    #     )
+    #     return resp
+
+    def update_item(self, partition_key: str, sort_key: str, update_dict: dict = None, remove_list: list = None):
         """
-        Update an item in the table with its keys (Partition and Sort) and attributes to update
-        If the attribute does not exist, it will be created. It won't change attributes not mentioned.
-        @param key: dict with the keys (Partition and Sort)
-        @param update_attributes: dict with the attributes to update
-        @return: dict with the response from DynamoDB
+        @param update_dict: dict with attributes to SET
+        @param remove_list: list of attribute names to REMOVE
         """
+        update_expression_parts = []
+        expression_attribute_names = {}
+        expression_value_names = {}
 
-        data_key_value_pairs = list(update_dict.items())
+        # remove se a opcao aparecer
+        if update_dict:
+            data_pairs = list(update_dict.items())
+            set_parts = [f"#attr{i} = :val{i}" for i in range(len(data_pairs))]
+            update_expression_parts.append("SET " + ", ".join(set_parts))
+            
+            expression_attribute_names.update({f"#attr{i}": data_pairs[i][0] for i in range(len(data_pairs))})
+            expression_value_names.update({f":val{i}": data_pairs[i][1] for i in range(len(data_pairs))})
 
-        update_expression = "SET " + ", ".join([f"#attr{i} = :val{i}" for i in range(len(data_key_value_pairs))]) # SET attribute1=:value1, attribute2=:value2
-        expression_attribute_names = {f"#attr{i}": data_key_value_pairs[i][0] for i in range(len(data_key_value_pairs))} # {"_attribute1": "attribute1", ":_attribute2": "attribute2"}
-        expression_value_names = {f":val{i}": data_key_value_pairs[i][1] for i in range(len(data_key_value_pairs))} # {":value1": "value1", ":value2": "value2"}
+        # remove se a opcao aparecer
+        if remove_list:
+            remove_parts = [f"#rem{i}" for i in range(len(remove_list))]
+            update_expression_parts.append("REMOVE " + ", ".join(remove_parts))
+            
+            expression_attribute_names.update({f"#rem{i}": remove_list[i] for i in range(len(remove_list))})
 
-        resp = self.dynamo_table.update_item(
-            Key={
-                self.partition_key: partition_key,
-                self.sort_key: sort_key
-            },
-            UpdateExpression=update_expression,
-            ExpressionAttributeNames=expression_attribute_names,
-            ExpressionAttributeValues=expression_value_names,
-            ReturnValues="ALL_NEW"
-        )
-        return resp
+        update_expression = " ".join(update_expression_parts)
+
+        kwargs = {
+            "Key": {self.partition_key: partition_key, self.sort_key: sort_key},
+            "UpdateExpression": update_expression,
+            "ExpressionAttributeNames": expression_attribute_names,
+            "ReturnValues": "ALL_NEW"
+        }
+        if expression_value_names:
+            kwargs["ExpressionAttributeValues"] = expression_value_names
+
+        return self.dynamo_table.update_item(**kwargs)
 
     def delete_item(self, partition_key: str, sort_key: str = None):
         """

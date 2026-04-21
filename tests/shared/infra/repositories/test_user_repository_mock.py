@@ -1,5 +1,6 @@
 from src.shared.domain.entities.user import User
 from src.shared.domain.enums.role_enum import ROLE
+from src.shared.domain.enums.status_user_enum import USERSTATUS
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 
 
@@ -79,3 +80,16 @@ class Test_UserRepositoryMock:
         assert user is not None
         assert user.name == "Bruno"
 
+    def test_confirm_user_registration(self):
+        repo = UserRepositoryMock()
+        user = repo.confirm_user_registration("21.00458-7@maua.br")
+
+        assert user is not None
+        assert user.name == "Bruno"
+        assert user.status == USERSTATUS.CONFIRMED
+        assert user.expires_at is None
+
+    def test_confirm_user_registration_not_found(self):
+        repo = UserRepositoryMock()
+        user = repo.confirm_user_registration("non-existent@test.com")
+        assert user is None

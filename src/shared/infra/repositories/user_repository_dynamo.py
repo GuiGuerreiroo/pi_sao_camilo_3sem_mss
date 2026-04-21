@@ -15,19 +15,6 @@ class UserRepositoryDynamo(IUserRepository):
     @staticmethod
     def partition_key_format(user_id: str) -> str:
         return f"USER#{user_id}"
-    
-        # match userRole:
-        #     case ROLE.USER: 
-        #         return  f"USER#{user_id}"
-            
-        #     case ROLE.ADM:
-        #         return f"ADM#{user_id}"
-            
-        #     case ROLE.SUPPORT:
-        #         return f"SUPPORT#{user_id}"
-            
-        #     case _:
-        #         return f"USER#{user_id}"
 
     @staticmethod
     def sort_key_format() -> str:
@@ -167,6 +154,34 @@ class UserRepositoryDynamo(IUserRepository):
         if not updated_user:
             return None
 
+
+        updated_user["user_id"]= self.remove_prefix(updated_user["user_id"])
+
+        updated_user.pop("PK", None)
+        updated_user.pop("SK", None)
+
+        updated_user= User.model_validate(updated_user)
+
+        return updated_user
+    
+    def confirm_user_registration(self, email: str) -> Optional[User]:
+
+        user= self.get_user_by_email(email)
+
+        if not user:
+            return None
+
+        update = self.dynamo.update_item(
+            partition_key=self.partition_key_format(user.user_id), 
+            sort_key=self.sort_key_format(), 
+            update_dict={"status": "CONFIRMED"},
+            remove_list=["expires_at"]
+        )
+
+        updated_user= update.get("Attributes")
+
+        if not updated_user:
+            return None
 
         updated_user["user_id"]= self.remove_prefix(updated_user["user_id"])
 
