@@ -39,7 +39,7 @@ class Test_CreateUserUsecase:
             UserAttributes=[
                 {'Name': 'name', 'Value': 'Vitor Choueri'},
                 {'Name': 'email', 'Value': 'branco@branco.branco'},
-                {'Name': 'custom:role', 'Value': ROLE.USER.value}
+                {'Name': 'role', 'Value': ROLE.USER.value}
             ]
         )
         repo = UserRepositoryMock()
