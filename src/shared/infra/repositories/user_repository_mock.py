@@ -16,6 +16,7 @@ class UserRepositoryMock(IUserRepository):
     def __init__(self):
         self.users = [
             User(
+                user_id="550e8400-e29b-41d4-a716-446655440002",
                 name="Guilherme",
                 email="25.00178-5@maua.br", 
                 role=ROLE.USER,
