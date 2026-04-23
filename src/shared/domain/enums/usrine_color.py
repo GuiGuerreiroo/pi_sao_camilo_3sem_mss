@@ -1,0 +1,10 @@
+from enum import Enum
+
+class URINE_COLOR(Enum):
+    TRANSLUCENT = "TRANSLUCENT"
+    LIGHT_YELLOW = "LIGHT_YELLOW"
+    YELLOW = "YELLOW"
+    DARK_YELLOW = "DARK_YELLOW"
+    ORANGE = "ORANGE"
+    GREEN = "GREEN"
+    DARK_GREEN = "DARK_GREEN"
