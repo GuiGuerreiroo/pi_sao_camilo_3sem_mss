@@ -1,3 +1,4 @@
+from src.shared.domain.repositories.training_repository_interface import ITrainingRepository
 import enum
 from enum import Enum
 import os
@@ -74,6 +75,17 @@ class Environments:
         elif Environments.get_envs().stage in [STAGE.DEV, STAGE.HOMOLOG, STAGE.PROD]:
             from src.shared.infra.repositories.user_repository_dynamo import UserRepositoryDynamo
             return UserRepositoryDynamo()
+        else:
+            raise Exception("No repository found for this stage")
+
+    @staticmethod
+    def get_training_repo() -> ITrainingRepository:
+        if Environments.get_envs().stage == STAGE.TEST:
+            from src.shared.infra.repositories.training_repository_mock import TrainingRepositoryMock
+            return TrainingRepositoryMock()
+        elif Environments.get_envs().stage in [STAGE.DEV, STAGE.HOMOLOG, STAGE.PROD]:
+            from src.shared.infra.repositories.training_repository_dynamo import TrainingRepositoryDynamo
+            return TrainingRepositoryDynamo()
         else:
             raise Exception("No repository found for this stage")
 
