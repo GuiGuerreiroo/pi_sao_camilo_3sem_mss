@@ -147,3 +147,7 @@ class LambdaConstruct(Construct):
             self.confirm_user,
             self.resend_code
         ]
+
+        self.functions_that_need_bedrock_access= [
+            
+        ]
