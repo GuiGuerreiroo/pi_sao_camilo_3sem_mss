@@ -1,8 +1,9 @@
+from iac.components.event_bridge_construct import EventBridgeConstruct
 from aws_cdk import (
     Stack,
     aws_iam as iam,
-    aws_cognito as cognito,
-    aws_apigateway as apigw
+    aws_apigateway as apigw,
+    aws_events_targets as targets
 )
 from constructs import Construct
 import os
@@ -43,6 +44,8 @@ class IacStack(Stack):
             bucket_arn=self.s3_bucket_construct.s3_bucket_context_files.bucket_arn
         )
 
+        self.event_bridge_construct= EventBridgeConstruct(self, self.s3_bucket_construct.s3_bucket_context_files.bucket_name)
+
         # permitindo que a kb_role do bedrock leia arquivos do s3
         self.s3_bucket_construct.s3_bucket_context_files.grant_read(self.bedrock_construct.kb_role)
 
@@ -74,6 +77,13 @@ class IacStack(Stack):
             authorizer= api_authorizer
         )
 
+        # add the lambda to be trigged by the event bridge when the .pdf object is added to s3
+        self.event_bridge_construct.trigger_ingestion_rule.add_target(
+            targets.LambdaFunction(
+                handler=self.lambda_construct.bedrock_ingestion
+            )
+        )
+
         # cognito access
         cognito_policy = iam.PolicyStatement(
             actions=[
@@ -102,7 +112,11 @@ class IacStack(Stack):
                 "bedrock:StartIngestionJob"
             ],
             resources=[
-                self.bedrock_construct.knowledge_base.attr_knowledge_base_arn
+                # this one gives acces to the Kb it self
+                self.bedrock_construct.knowledge_base.attr_knowledge_base_arn,
+                
+                # this line line below it gives access to the datasource and Jobs inside KB
+                f"{self.bedrock_construct.knowledge_base.attr_knowledge_base_arn}/*"
             ]
         )
 

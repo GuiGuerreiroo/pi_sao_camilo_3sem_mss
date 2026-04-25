@@ -42,24 +42,24 @@ class LambdaConstruct(Construct):
         return function
     
 
-    # def create_background_lambda(
-    #     self,
-    #     module_name: str,
-    #     environment_variables: dict
-    # ):
-    #     function= lambda_.Function(
-    #         self,
-    #         module_name.title(),
-    #         function_name=f"pnesc-{module_name}",
-    #         code=lambda_.Code.from_asset(f"../src/modules/{module_name}"),
-    #         handler=f"app.{module_name}_presenter.lambda_handler",
-    #         runtime=lambda_.Runtime.PYTHON_3_13,
-    #         layers=[self.lambda_layer],
-    #         environment=environment_variables,
-    #         timeout=Duration.seconds(35)
-    #     )
+    def create_background_lambda(
+        self,
+        module_name: str,
+        environment_variables: dict
+    ):
+        function= lambda_.Function(
+            self,
+            module_name.title(),
+            function_name=f"pnesc-{module_name}",
+            code=lambda_.Code.from_asset(f"../src/modules/{module_name}"),
+            handler=f"app.{module_name}_presenter.lambda_handler",
+            runtime=lambda_.Runtime.PYTHON_3_13,
+            layers=[self.lambda_layer],
+            environment=environment_variables,
+            timeout=Duration.seconds(35)
+        )
 
-    #     return function
+        return function
     
     def __init__(
         self,
@@ -84,6 +84,11 @@ class LambdaConstruct(Construct):
         #     module_name="create_user_cognito",
         #     environment_variables=environment_variables
         # )
+
+        self.bedrock_ingestion= self.create_background_lambda(
+            module_name="bedrock_ingestion",
+            environment_variables=environment_variables
+        )
 
         self.auth_user_function= self.create_lambda_api_gateway_integration(
             module_name="auth_user",
@@ -133,6 +138,8 @@ class LambdaConstruct(Construct):
             authorizer=authorizer
         )
 
+        
+
         self.functions_that_need_db_access= [
             self.create_user,
             self.get_user_function,
@@ -149,5 +156,5 @@ class LambdaConstruct(Construct):
         ]
 
         self.functions_that_need_bedrock_access= [
-            
+            self.bedrock_ingestion
         ]

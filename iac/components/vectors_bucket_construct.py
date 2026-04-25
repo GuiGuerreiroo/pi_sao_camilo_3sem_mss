@@ -15,16 +15,7 @@ class VectorsBucketConstruct(Construct):
 
         self.github_ref_name = os.environ.get("GITHUB_REF_NAME", "dev")
 
-        stage= ''
-
-        if 'prod' in self.github_ref_name.lower():
-            stage= 'PROD'
-
-        elif 'homolog'in self.github_ref_name.lower():
-            stage= 'HOMOLOG'
-
-        else:
-            stage= 'DEV'
+        stage= self.github_ref_name
 
         # cria o bucket de vetores
         self.s3_vectors_bucket_context_files= s3.CfnBucket(
