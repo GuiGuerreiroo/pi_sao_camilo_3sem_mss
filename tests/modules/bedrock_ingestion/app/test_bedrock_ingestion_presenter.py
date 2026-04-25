@@ -1,3 +1,6 @@
+import os
+os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
+
 import pytest
 from unittest.mock import MagicMock, patch
 
