@@ -5,7 +5,7 @@ from src.shared.helpers.errors.controller_errors import MissingParameters, Wrong
 from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.usecase_errors import NoItemsFound, DuplicatedItem, UnconfirmedUserError
-from src.shared.helpers.external_interfaces.http_codes import OK, NotFound, BadRequest, InternalServerError, Conflict
+from src.shared.helpers.external_interfaces.http_codes import Created, NotFound, BadRequest, InternalServerError, Conflict
 
 class CreateUserController:
 
@@ -72,7 +72,7 @@ class CreateUserController:
                 'message': 'User successfully created'
             }
 
-            response = OK(viewmodel)
+            response = Created(viewmodel)
             
             return response
 
