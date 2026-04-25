@@ -1,4 +1,3 @@
-from iac.components.event_bridge_construct import EventBridgeConstruct
 from aws_cdk import (
     Stack,
     aws_iam as iam,
@@ -15,6 +14,7 @@ from components.lambda_construct import LambdaConstruct
 from components.bedrock_construct import BedrockConstruct
 from components.vectors_bucket_construct import VectorsBucketConstruct
 from components.bucket_construct import BucketConstruct
+from components.event_bridge_construct import EventBridgeConstruct
 
 class IacStack(Stack):
     def __init__(
