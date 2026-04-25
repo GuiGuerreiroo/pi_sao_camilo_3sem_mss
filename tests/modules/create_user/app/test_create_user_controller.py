@@ -29,7 +29,7 @@ class Test_CreateUserControler:
 
         response = controller(request=request)
 
-        assert response.status_code == 200
+        assert response.status_code == 201
         assert response.body['user']['name'] == repo.users[-1].name
         assert response.body['user']['email'] == repo.users[-1].email
         assert response.body['user']['role'] == ROLE.USER.value
