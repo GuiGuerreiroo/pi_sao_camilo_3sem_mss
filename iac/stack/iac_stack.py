@@ -1,8 +1,9 @@
+from iac.components.event_bridge_construct import EventBridgeConstruct
 from aws_cdk import (
     Stack,
     aws_iam as iam,
-    aws_cognito as cognito,
-    aws_apigateway as apigw
+    aws_apigateway as apigw,
+    aws_events_targets as targets
 )
 from constructs import Construct
 import os
@@ -11,6 +12,9 @@ from components.apigw_construct import ApigwConstruct
 from components.dynamo_construct import DynamoConstruct
 from components.cognito_construct import CognitoConstruct
 from components.lambda_construct import LambdaConstruct
+from components.bedrock_construct import BedrockConstruct
+from components.vectors_bucket_construct import VectorsBucketConstruct
+from components.bucket_construct import BucketConstruct
 
 class IacStack(Stack):
     def __init__(
@@ -29,6 +33,22 @@ class IacStack(Stack):
 
         self.cognito_construct= CognitoConstruct(self, "SaoCamiloUserPool")
 
+        self.s3_bucket_construct= BucketConstruct(self)
+
+        self.s3_vectors_bucket_construct= VectorsBucketConstruct(self)
+
+        self.bedrock_construct= BedrockConstruct(
+            self,
+            vector_bucket_arn=self.s3_vectors_bucket_construct.s3_vectors_bucket_context_files.attr_arn,
+            vector_index_arn=self.s3_vectors_bucket_construct.vector_index_arn,
+            bucket_arn=self.s3_bucket_construct.s3_bucket_context_files.bucket_arn
+        )
+
+        self.event_bridge_construct= EventBridgeConstruct(self, self.s3_bucket_construct.s3_bucket_context_files.bucket_name)
+
+        # permitindo que a kb_role do bedrock leia arquivos do s3
+        self.s3_bucket_construct.s3_bucket_context_files.grant_read(self.bedrock_construct.kb_role)
+
         ENVIRONMENT_VARIABLES= {
             "STAGE": stage,
             "REGION": self.region,
@@ -36,7 +56,9 @@ class IacStack(Stack):
             "DYNAMO_PARTITION_KEY": self.dynamo_construct.PARTITION_KEY_NAME,
             "DYNAMO_SORT_KEY": self.dynamo_construct.SORT_KEY_NAME,
             "COGNITO_CLIENT_ID": self.cognito_construct.client.user_pool_client_id,
-            "COGNITO_USER_POOL_ID": self.cognito_construct.user_pool.user_pool_id
+            "COGNITO_USER_POOL_ID": self.cognito_construct.user_pool.user_pool_id,
+            "KNOWLEDGE_BASE_ID": self.bedrock_construct.knowledge_base.attr_knowledge_base_id,
+            "DATA_SOURCE_ID": self.bedrock_construct.data_source.attr_data_source_id
         }
         
 
@@ -55,13 +77,14 @@ class IacStack(Stack):
             authorizer= api_authorizer
         )
 
-        # adicionar a lambda a ser acionada apos a criacao do user no userpool, para fazer sue registro no Banco de dados.
-        # self.cognito_construct.user_pool.add_trigger(
-        #     cognito.UserPoolOperation.POST_CONFIRMATION,
-        #     self.lambda_construct.create_user_cognito_function
-        # )
+        # add the lambda to be trigged by the event bridge when the .pdf object is added to s3
+        self.event_bridge_construct.trigger_ingestion_rule.add_target(
+            targets.LambdaFunction(
+                handler=self.lambda_construct.bedrock_ingestion
+            )
+        )
 
-        # politica de IAM para permitir a lambda usar o cognito
+        # cognito access
         cognito_policy = iam.PolicyStatement(
             actions=[
                 "cognito-idp:SignUp",
@@ -77,5 +100,25 @@ class IacStack(Stack):
         for fn in self.lambda_construct.functions_that_need_cognito_iam_policy:
             fn.add_to_role_policy(cognito_policy)
 
+        # dynamo access
         for fn in self.lambda_construct.functions_that_need_db_access:
             self.dynamo_construct.sao_camilo_table.grant_read_write_data(fn)
+
+        # bedrock access
+        bedrock_policy= iam.PolicyStatement(
+            actions=[
+                "bedrock:RetrieveAndGenerate",
+                "bedrock:Retrieve",
+                "bedrock:StartIngestionJob"
+            ],
+            resources=[
+                # this one gives acces to the Kb it self
+                self.bedrock_construct.knowledge_base.attr_knowledge_base_arn,
+                
+                # this line line below it gives access to the datasource and Jobs inside KB
+                f"{self.bedrock_construct.knowledge_base.attr_knowledge_base_arn}/*"
+            ]
+        )
+
+        for fn in self.lambda_construct.functions_that_need_bedrock_access:
+            fn.add_to_role_policy(bedrock_policy)

@@ -31,7 +31,7 @@ class Test_CreateUserPresenter:
 
         response = lambda_handler(event, None)
 
-        assert response["statusCode"] == 200
+        assert response["statusCode"] == 201
         body = json.loads(response["body"])
         assert body["message"] == "User successfully created"
         assert body["user"]["name"] == "Test User"

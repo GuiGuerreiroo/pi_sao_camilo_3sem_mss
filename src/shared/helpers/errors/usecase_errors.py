@@ -27,3 +27,7 @@ class UserExpiredError(BaseError):
 class UserAlreadyConfirmedError(BaseError):
     def __init__(self, message: str = "Usuário já foi confirmado."):
         super().__init__(message)
+
+class DataIngestionError(BaseError):
+    def __init__(self, message: str):
+        super().__init__(f'Data ingestion failed: {message}')

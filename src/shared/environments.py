@@ -32,7 +32,10 @@ class Environments:
     cloud_front_distribution_domain: str
     mss_name: str
     cognito_client_id: str
-
+    cognito_user_pool_id: str
+    knowledge_base_id: str
+    data_source_id: str
+    
     def _configure_local(self):
         from dotenv import load_dotenv
         load_dotenv()
@@ -55,6 +58,8 @@ class Environments:
             self.cloud_front_distribution_domain = "https://d3q9q9q9q9q9q9.cloudfront.net"
             self.cognito_client_id= "n7m2p9sk18va45gtzxwy02ub61"
             self.cognito_user_pool_id= "us-east-XXXXXXX"
+            self.knowledge_base_id="jfajkflakflafkaf"
+            self.data_source_id="alfkjafkafafkakf"
 
         else:
             self.s3_bucket_name = os.environ.get("S3_BUCKET_NAME")
@@ -66,6 +71,8 @@ class Environments:
             self.cloud_front_distribution_domain = os.environ.get("CLOUD_FRONT_DISTRIBUTION_DOMAIN")
             self.cognito_client_id=os.environ.get("COGNITO_CLIENT_ID")
             self.cognito_user_pool_id=os.environ.get("COGNITO_USER_POOL_ID")
+            self.knowledge_base_id=os.environ.get("KNOWLEDGE_BASE_ID")
+            self.data_source_id=os.environ.get("DATA_SOURCE_ID")
 
     @staticmethod
     def get_user_repo() -> IUserRepository:
