@@ -73,14 +73,9 @@ class BedrockConstruct(Construct):
             storage_configuration= bedrock.CfnKnowledgeBase.StorageConfigurationProperty(
                 type="S3_VECTORS",
                 s3_vectors_configuration=bedrock.CfnKnowledgeBase.S3VectorsConfigurationProperty(
-                    bucket_arn=vector_bucket_arn,
+                    vector_bucket_arn=vector_bucket_arn,
                     index_arn=vector_index_arn,
-                    field_mapping=bedrock.CfnKnowledgeBase.S3VectorsFieldMappingProperty(
-                        primary_key_field="id",
-                        vector_field="embedding",
-                        text_field="chunks",
-                        metadata_field="metadata"
-                    )
+                    index_name="nutri-index"
                 )
             )
         )
