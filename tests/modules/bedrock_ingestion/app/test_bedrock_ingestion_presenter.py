@@ -49,7 +49,29 @@ class TestBedrockIngestionPresenter:
 
             response = lambda_handler(event, None)
 
-            # Wait, the presenter has a bug where it continues even if the source is invalid!
-            # It just sets `http_response` but then calls the controller anyway and overrides the response!
-            # So this test checks what currently happens.
-            assert "statusCode" in response
+            assert response["statusCode"] == 400
+            assert "Invalid event source" in response["body"]
+
+    @patch("src.modules.bedrock_ingestion.app.bedrock_ingestion_presenter.BedrockIngestionUseCase")
+    @patch("src.modules.bedrock_ingestion.app.bedrock_ingestion_presenter.BedrockIngestionController")
+    def test_lambda_handler_success_deleted(self, mock_controller_class, mock_usecase_class):
+        from src.modules.bedrock_ingestion.app.bedrock_ingestion_presenter import lambda_handler
+        
+        with patch("src.modules.bedrock_ingestion.app.bedrock_ingestion_presenter.controller") as mock_controller:
+            mock_controller.return_value.status_code = 200
+            mock_controller.return_value.body = {"message": "Bedrock ingestion started successfully"}
+            mock_controller.return_value.headers = {}
+
+            event = {
+                "source": "aws.s3",
+                "detail-type": "Object Deleted",
+                "detail": {
+                    "bucket": {"name": "test-bucket"},
+                    "object": {"key": "test-file.txt"}
+                }
+            }
+
+            response = lambda_handler(event, None)
+
+            assert response["statusCode"] == 200
+            assert "Bedrock ingestion started successfully" in response["body"]

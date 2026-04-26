@@ -23,7 +23,10 @@ class EventBridgeConstruct(Construct):
             description="Triggers the Bedrock KB sync when a new PDF is uploaded.",
             event_pattern=events.EventPattern(
                 source=["aws.s3"],
-                detail_type=["Object Created"],
+                detail_type=[
+                    "Object Created",
+                    "Object Deleted"
+                ],
                 detail={
                     "bucket": {
                         "name": [s3_bucket_name]

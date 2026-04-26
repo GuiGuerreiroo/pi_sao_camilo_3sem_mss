@@ -80,11 +80,6 @@ class LambdaConstruct(Construct):
             compatible_runtimes=[lambda_.Runtime.PYTHON_3_13]
         )
 
-        # self.create_user_cognito_function= self.create_background_lambda(
-        #     module_name="create_user_cognito",
-        #     environment_variables=environment_variables
-        # )
-
         self.bedrock_ingestion= self.create_background_lambda(
             module_name="bedrock_ingestion",
             environment_variables=environment_variables
