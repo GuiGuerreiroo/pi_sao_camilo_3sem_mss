@@ -38,10 +38,10 @@ class BedrockConstruct(Construct):
         self.kb_role.add_to_policy(
             iam.PolicyStatement(
                 actions=[
-                    "s3:InsertVectors",
-                    "s3:QueryVectors",
-                    "s3:ListVectors",
-                    "s3:DeleteVectors"
+                    "s3vectors:PutVectors",
+                    "s3vectors:QueryVectors",
+                    "s3vectors:GetVectors",
+                    "s3vectors:DeleteVectors"
                 ],
                 resources=[vector_bucket_arn, vector_index_arn]
             )

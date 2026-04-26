@@ -39,7 +39,7 @@ class IacStack(Stack):
 
         self.bedrock_construct= BedrockConstruct(
             self,
-            vector_bucket_arn=self.s3_vectors_bucket_construct.s3_vectors_bucket_context_files.attr_arn,
+            vector_bucket_arn=self.s3_vectors_bucket_construct.vector_bucket_arn,
             vector_index_arn=self.s3_vectors_bucket_construct.vector_index_arn,
             bucket_arn=self.s3_bucket_construct.s3_bucket_context_files.bucket_arn
         )
