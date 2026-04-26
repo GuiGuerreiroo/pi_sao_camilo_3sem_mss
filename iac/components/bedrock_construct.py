@@ -42,6 +42,8 @@ class BedrockConstruct(Construct):
                     "s3vectors:QueryVectors",
                     "s3vectors:GetVectors",
                     "s3vectors:DeleteVectors"
+                    "s3vectors:GetIndex", 
+                    "s3vectors:GetVectorBucket"
                 ],
                 resources=[vector_bucket_arn, vector_index_arn]
             )
