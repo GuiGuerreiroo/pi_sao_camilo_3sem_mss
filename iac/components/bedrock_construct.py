@@ -67,8 +67,7 @@ class BedrockConstruct(Construct):
                 type="S3_VECTORS",
                 s3_vectors_configuration=bedrock.CfnKnowledgeBase.S3VectorsConfigurationProperty(
                     vector_bucket_arn=vector_bucket_arn,
-                    index_arn=vector_index_arn,
-                    index_name="nutri-index"
+                    index_arn=vector_index_arn
                 )
             )
         )
