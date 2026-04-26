@@ -27,27 +27,59 @@ class BedrockConstruct(Construct):
             assumed_by=iam.ServicePrincipal("bedrock.amazonaws.com"),
         )
 
-        # permite o bedrock usar o modelo de embbending
-        self.kb_role.add_to_policy(
-            iam.PolicyStatement(
-                actions=["bedrock:InvokeModel"],
-                resources=[f"arn:aws:bedrock:{os.environ.get('REGION', 'us-east-1')}::foundation-model/amazon.titan-embed-text-v2:0"]
-            )
+
+        kb_setup_policy= iam.Policy(
+            self,
+            "BedrockKBSetupPolicy",
+            statements=[
+                iam.PolicyStatement(
+                    actions=["bedrock:InvokeModel"],
+                    resources=[f"arn:aws:bedrock:{os.environ.get('REGION', 'us-east-1')}::foundation-model/amazon.titan-embed-text-v2:0"]
+                ),
+                iam.PolicyStatement(
+                    actions=[
+                        "s3vectors:PutVectors",
+                        "s3vectors:QueryVectors",
+                        "s3vectors:GetVectors",
+                        "s3vectors:DeleteVectors",
+                        "s3vectors:GetIndex", 
+                        "s3vectors:GetVectorBucket" 
+                    ],
+                    resources=[
+                        vector_bucket_arn, 
+                        vector_index_arn,
+                        f"{vector_bucket_arn}/*",
+                        f"{vector_index_arn}/*"
+                    ]
+                )
+
+            ]
         )
 
-        self.kb_role.add_to_policy(
-            iam.PolicyStatement(
-                actions=[
-                    "s3vectors:PutVectors",
-                    "s3vectors:QueryVectors",
-                    "s3vectors:GetVectors",
-                    "s3vectors:DeleteVectors",
-                    "s3vectors:GetIndex", 
-                    "s3vectors:GetVectorBucket"
-                ],
-                resources=[vector_bucket_arn, vector_index_arn]
-            )
-        )
+        # Adiciona as permissoes a minha role
+        self.kb_role.attach_inline_policy(kb_setup_policy)
+
+        # permite o bedrock usar o modelo de embbending
+        # self.kb_role.add_to_policy(
+        #     iam.PolicyStatement(
+        #         actions=["bedrock:InvokeModel"],
+        #         resources=[f"arn:aws:bedrock:{os.environ.get('REGION', 'us-east-1')}::foundation-model/amazon.titan-embed-text-v2:0"]
+        #     )
+        # )
+
+        # self.kb_role.add_to_policy(
+        #     iam.PolicyStatement(
+        #         actions=[
+        #             "s3vectors:PutVectors",
+        #             "s3vectors:QueryVectors",
+        #             "s3vectors:GetVectors",
+        #             "s3vectors:DeleteVectors",
+        #             "s3vectors:GetIndex", 
+        #             "s3vectors:GetVectorBucket"
+        #         ],
+        #         resources=[vector_bucket_arn, vector_index_arn]
+        #     )
+        # )
 
         self.knowledge_base= bedrock.CfnKnowledgeBase(
             self,
@@ -73,6 +105,9 @@ class BedrockConstruct(Construct):
                 )
             )
         )
+
+        # forca o kb esperar as permissoes serem atreladas a ele
+        self.knowledge_base.node.add_dependency(kb_setup_policy)
 
         self.data_source= bedrock.CfnDataSource(
             self,
