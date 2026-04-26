@@ -57,9 +57,9 @@ class VectorsBucketConstruct(Construct):
         # fala para o cloud formation para ele cria o bucket antes de criar o index
         self.s3_vectors_index.node.add_dependency(self.s3_vectors_bucket_context_files)
 
-        self.vector_bucket_arn=self.s3_vectors_bucket_context_files.attr_arn
+        self.vector_bucket_arn=self.s3_vectors_bucket_context_files.attr_vector_bucket_arn
 
-        self.vector_index_arn=self.s3_vectors_index.attr_arn
+        self.vector_index_arn=self.s3_vectors_index.attr_index_arn
 
 
 
