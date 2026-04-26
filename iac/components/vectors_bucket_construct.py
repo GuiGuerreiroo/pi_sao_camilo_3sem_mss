@@ -20,16 +20,16 @@ class VectorsBucketConstruct(Construct):
         self.s3_vectors_bucket_context_files= s3vectors.CfnVectorBucket(
             self,
             "ProjetoNutriEsportivaSaoCamilo_Context_File_Vector_Bucket",
-            bucket_name=f"projeto-nutri-esportiva-sao-camilo-context-files-vector-{stage.lower()}",
+            vector_bucket_name=f"projeto-nutri-esportiva-sao-camilo-context-files-vector-{stage.lower()}",
         )
 
         self.s3_vectors_index= s3vectors.CfnIndex(
             self,
             "ProjetoNutriEsportivaSaoCamilo_Context_File_Vector_Index",
-            vector_bucket_name=self.s3_vectors_bucket_context_files.bucket_name,
+            vector_bucket_name=self.s3_vectors_bucket_context_files.vector_bucket_name,
             index_name="nutri-index",
             dimension=256,
-            data_type="float32",
+            data_type="FLOAT32",
             distance_metric="COSINE"
         )
 
