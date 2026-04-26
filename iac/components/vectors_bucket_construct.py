@@ -29,8 +29,8 @@ class VectorsBucketConstruct(Construct):
             vector_bucket_name=self.s3_vectors_bucket_context_files.vector_bucket_name,
             index_name="nutri-index",
             dimension=256,
-            data_type="FLOAT32",
-            distance_metric="COSINE"
+            data_type="float32",
+            distance_metric="cosine"
         )
 
         #cria o vetor de index usando custom resource / é o espaco para o amazon bedrock inserir os embeddings
