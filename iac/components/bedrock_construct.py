@@ -17,16 +17,8 @@ class BedrockConstruct(Construct):
         super().__init__(scope, "ProjetoNutriEsportivaSaoCamilo_Bedrock")
 
         self.github_ref_name = os.environ.get("GITHUB_REF_NAME", "dev")
-        stage= ''
-
-        if 'prod' in self.github_ref_name.lower():
-            stage= 'PROD'
-
-        elif 'homolog'in self.github_ref_name.lower():
-            stage= 'HOMOLOG'
-
-        else:
-            stage= 'DEV'
+        
+        stage= self.github_ref_name
 
         self.kb_role= iam.Role(
             self,
@@ -58,6 +50,7 @@ class BedrockConstruct(Construct):
         self.knowledge_base= bedrock.CfnKnowledgeBase(
             self,
             "ProjetoNutriEsportivaSaoCamilo_KnowledgeBase",
+            name=f"nutri-esportiva-sao-camilo-kb-{stage.lower()}",
             role_arn=self.kb_role.role_arn,
             knowledge_base_configuration=bedrock.CfnKnowledgeBase.KnowledgeBaseConfigurationProperty(
                 type="VECTOR",
