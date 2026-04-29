@@ -62,7 +62,7 @@ class BedrockConstruct(Construct):
         self.knowledge_base= bedrock.CfnKnowledgeBase(
             self,
             "ProjetoNutriEsportivaSaoCamilo_KnowledgeBase",
-            name=f"nutri-esportiva-sao-camilo-kb-{stage.lower()}",
+            name=f"nutri-esportiva-sao-camilo-kb-{stage.lower()}-v2",
             role_arn=self.kb_role.role_arn,
             knowledge_base_configuration=bedrock.CfnKnowledgeBase.KnowledgeBaseConfigurationProperty(
                 type="VECTOR",
