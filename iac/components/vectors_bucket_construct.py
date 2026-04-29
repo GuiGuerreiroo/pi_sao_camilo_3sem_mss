@@ -28,7 +28,7 @@ class VectorsBucketConstruct(Construct):
             "ProjetoNutriEsportivaSaoCamilo_Context_File_Vector_Index",
             vector_bucket_name=self.s3_vectors_bucket_context_files.vector_bucket_name,
             index_name="nutri-index",
-            dimension=256,
+            dimension=1024,
             data_type="float32",
             distance_metric="cosine"
         )

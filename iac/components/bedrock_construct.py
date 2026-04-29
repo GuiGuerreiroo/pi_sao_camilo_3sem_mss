@@ -70,7 +70,7 @@ class BedrockConstruct(Construct):
                     embedding_model_arn=f"arn:aws:bedrock:{os.environ.get('REGION', 'us-east-1')}::foundation-model/amazon.titan-embed-text-v2:0",
                     embedding_model_configuration=bedrock.CfnKnowledgeBase.EmbeddingModelConfigurationProperty(
                         bedrock_embedding_model_configuration=bedrock.CfnKnowledgeBase.BedrockEmbeddingModelConfigurationProperty(
-                            dimensions=256
+                            dimensions=1024
                         )
                     )
                 )
@@ -97,5 +97,15 @@ class BedrockConstruct(Construct):
                 s3_configuration=bedrock.CfnDataSource.S3DataSourceConfigurationProperty(
                     bucket_arn=bucket_arn
                 )
+            ),
+            vector_ingestion_configuration=bedrock.CfnDataSource.VectorIngestionConfigurationProperty(
+                chunking_configuration=bedrock.CfnDataSource.ChunkingConfigurationProperty(
+                    chunking_strategy="SEMANTIC",
+                    semantic_chunking_configuration=bedrock.CfnDataSource.SemanticChunkingConfigurationProperty(
+                        breakpoint_percentile_threshold=95,
+                        buffer_size=1,
+                        max_tokens=800
+                    )
+                )   
             )
         )
