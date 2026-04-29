@@ -27,10 +27,13 @@ class VectorsBucketConstruct(Construct):
             self,
             "ProjetoNutriEsportivaSaoCamilo_Context_File_Vector_Index",
             vector_bucket_name=self.s3_vectors_bucket_context_files.vector_bucket_name,
-            index_name="nutri-index-v2",
+            index_name="nutri-index",
             dimension=1024,
             data_type="float32",
-            distance_metric="cosine"
+            distance_metric="cosine",
+            metadata_configuration=s3vectors.CfnIndex.MetadataConfigurationProperty(
+                non_filterable_metadata_keys=["AMAZON_BEDROCK_TEXT", "AMAZON_BEDROCK_METADATA"]
+            )
         )
 
         # fala para o cloud formation para ele cria o bucket antes de criar o index
@@ -39,3 +42,24 @@ class VectorsBucketConstruct(Construct):
         self.vector_bucket_arn=self.s3_vectors_bucket_context_files.attr_vector_bucket_arn
 
         self.vector_index_arn=self.s3_vectors_index.attr_index_arn
+
+    def grant_bedrock_access(self, role_arn: str) -> s3vectors.CfnVectorBucketPolicy:
+        policy= s3vectors.CfnVectorBucketPolicy(
+            self,
+            "BedrockVectorBucketPolicy",
+            vector_bucket_name=self.s3_vectors_bucket_context_files.vector_bucket_name,
+            policy={
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "AWS": role_arn
+                        },
+                        "Action": "s3vectors:*",
+                        "Resource": "*"
+                    }
+                ]
+            }
+        )
+        return policy

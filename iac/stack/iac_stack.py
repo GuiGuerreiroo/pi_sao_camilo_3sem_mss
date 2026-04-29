@@ -49,6 +49,10 @@ class IacStack(Stack):
         # permitindo que a kb_role do bedrock leia arquivos do s3
         self.s3_bucket_construct.s3_bucket_context_files.grant_read(self.bedrock_construct.kb_role)
 
+        vector_bucket_policy=self.s3_vectors_bucket_construct.grant_bedrock_access(role_arn=self.bedrock_construct.kb_role.role_arn)
+
+        self.bedrock_construct.knowledge_base.node.add_dependency(vector_bucket_policy)
+
         ENVIRONMENT_VARIABLES= {
             "STAGE": stage,
             "REGION": self.region,
