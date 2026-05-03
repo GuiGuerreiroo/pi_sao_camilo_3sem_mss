@@ -116,7 +116,9 @@ class IacStack(Stack):
                 "bedrock:RetrieveAndGenerate",
                 "bedrock:Retrieve",
                 "bedrock:StartIngestionJob",
-                "bedrock:InvokeModel"
+                "bedrock:InvokeModel",
+                "bedrock:GetInferenceProfile",
+                "bedrock:GetFoundationModel"
             ],
             resources=[
                 # this one gives acces to the Kb it self
@@ -127,7 +129,7 @@ class IacStack(Stack):
                 
                 # give access to all LLMs
                 "arn:aws:bedrock:*::foundation-model/*",
-                
+
                 "arn:aws:bedrock:*:*:inference-profile/*"
             ]
         )
