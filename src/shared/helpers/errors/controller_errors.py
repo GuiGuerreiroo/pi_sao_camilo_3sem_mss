@@ -7,3 +7,7 @@ class MissingParameters(BaseError):
 class WrongTypeParameter(BaseError):
     def __init__(self, fieldName: str, fieldTypeExpected: str, fieldTypeReceived: str):
         super().__init__(f'Field {fieldName} isn\'t in the right type.\n Received: {fieldTypeReceived}.\n Expected: {fieldTypeExpected}')
+
+class InvalidRange(BaseError):
+    def __init__(self, fieldName: str, message: str):
+        super().__init__(f'Field {fieldName} is out of range. {message}')

@@ -4,9 +4,9 @@ from src.shared.domain.enums.usrine_color import URINE_COLOR
 from src.shared.domain.enums.modality import MODALITY
 from src.shared.domain.enums.role_enum import ROLE
 from src.shared.infra.dto.user_apigateway_dto import UserApiGatewayDTO
-from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
+from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter, InvalidRange
 from src.shared.helpers.errors.domain_errors import EntityError
-from src.shared.helpers.errors.usecase_errors import NoItemsFound, BedrockIntegrationError
+from src.shared.helpers.errors.usecase_errors import NoItemsFound, BedrockIntegrationError, ForbiddenAction
 from src.shared.helpers.external_interfaces.external_interface import IRequest, IResponse
 from src.shared.helpers.external_interfaces.http_codes import Created,NotFound, BadRequest, InternalServerError, Forbidden, ServiceUnavailable
 from .create_training_usecase import CreateTrainingUseCase
@@ -36,7 +36,7 @@ class CreateTrainingController:
                 raise NoItemsFound('user')
 
             if user.role != ROLE.USER:
-                raise Forbidden("user is not authorized to create training")
+                raise ForbiddenAction("user")
 
             # timestamp em milissegundos do momento atual
             current_timestamp = int(datetime.now().timestamp()) * 1000
@@ -64,7 +64,7 @@ class CreateTrainingController:
             start_date_test = datetime.fromtimestamp(start_date / 1000)
             
             if start_date_test.year < 2026:
-                raise BadRequest('start_date must be in millisecond')
+                raise InvalidRange('start_date', 'start_date must be in millisecond')
 
             end_date= request.data.get('end_date')
 
@@ -78,7 +78,7 @@ class CreateTrainingController:
             end_date_test = datetime.fromtimestamp(end_date / 1000)
             
             if end_date_test.year < 2026:
-                raise BadRequest('end_date must be in millisecond')
+                raise InvalidRange('end_date', 'end_date must be in millisecond')
 
             # expected to be in minutes
             duration= request.data.get('duration')
@@ -91,18 +91,18 @@ class CreateTrainingController:
 
             # validando que duration está em minutos
             if duration < 1:
-                raise BadRequest('duration should be greater than 0 minutes')
+                raise InvalidRange('duration', 'duration should be greater than 0 minutes')
 
             # validando a data de inicio é menor que a de fim
             if start_date >= end_date:
-                raise BadRequest('start_date should be less than end_date')
+                raise InvalidRange('start_date', 'start_date should be less than end_date')
 
             if start_date > current_timestamp or end_date > current_timestamp:
-                raise BadRequest('start_date and end_date should be less than current timestamp')
+                raise InvalidRange('start_date', 'start_date and end_date should be less than current timestamp')
 
             # validando a duração é maior que 0
             if duration <= 0.0:
-                raise BadRequest('duration should be greater than 0')
+                raise InvalidRange('duration', 'duration should be greater than 0')
 
             
             environment_temperature= request.data.get('environment_temperature')
@@ -114,10 +114,10 @@ class CreateTrainingController:
                 raise WrongTypeParameter('environment_temperature', 'float', type(environment_temperature))
 
             if environment_temperature < -40.0:
-                raise BadRequest('environment_temperature should be greater than or equal to -40')
+                raise InvalidRange('environment_temperature', 'environment_temperature should be greater than or equal to -40')
 
             if environment_temperature > 50.0:
-                raise BadRequest('environment_temperature should be less than or equal to 50')
+                raise InvalidRange('environment_temperature', 'environment_temperature should be less than or equal to 50')
 
 
             environment_humidity= request.data.get('environment_humidity')
@@ -162,11 +162,11 @@ class CreateTrainingController:
 
             # peso antes do treino precisa ser maior que 35kg
             if pre_training_weight <= 35.0:
-                raise BadRequest('pre_training_weight should be greater than 35kg')
+                raise InvalidRange('pre_training_weight', 'pre_training_weight should be greater than 35kg')
 
             # peso antes do treino não pode ser maior que 200kg
             if pre_training_weight > 200.0:
-                raise BadRequest('pre_training_weight should be less than or equal to 200kg')
+                raise InvalidRange('pre_training_weight', 'pre_training_weight should be less than or equal to 200kg')
             
             pre_training_hydration = request.data.get('pre_training_hydration')
 
@@ -178,11 +178,11 @@ class CreateTrainingController:
 
             # hidratacao antes do treino precisa ser maior que 0
             if pre_training_hydration < 0.0:
-                raise BadRequest('pre_training_hydration should be greater than or equal to 0')
+                raise InvalidRange('pre_training_hydration', 'pre_training_hydration should be greater than or equal to 0')
 
             # hidratacao antes do treino não pode ser maior que 5000ml = 5 liters
             if pre_training_hydration > 5000.0:
-                raise BadRequest('pre_training_hydration should be less than or equal to 5000')
+                raise InvalidRange('pre_training_hydration', 'pre_training_hydration should be less than or equal to 5000')
 
             during_training_hydration = request.data.get('during_training_hydration')
 
@@ -193,11 +193,11 @@ class CreateTrainingController:
 
                 # hidratacao durante o treino precisa ser maior que 0
                 if during_training_hydration <= 0.0:
-                    raise BadRequest('during_training_hydration should be greater than or equal to 0')
+                    raise InvalidRange('during_training_hydration', 'during_training_hydration should be greater than or equal to 0')
 
                 # hidratacao durante o treino não pode ser maior que 5000ml = 5 liters
                 if during_training_hydration > 5000.0:
-                    raise BadRequest('during_training_hydration should be less than or equal to 5000')
+                    raise InvalidRange('during_training_hydration', 'during_training_hydration should be less than or equal to 5000')
 
             else:
                 during_training_hydration = 0.0
@@ -209,10 +209,10 @@ class CreateTrainingController:
                     raise WrongTypeParameter('during_training_urine_elimination', 'float', type(during_training_urine_elimination))
 
                 if during_training_urine_elimination <= 0.0:
-                    raise BadRequest('during_training_urine_elimination should be greater than or equal to 0ml')
+                    raise InvalidRange('during_training_urine_elimination', 'during_training_urine_elimination should be greater than or equal to 0ml')
 
                 if during_training_urine_elimination > 4000.0:
-                    raise BadRequest('during_training_urine_elimination should be less than or equal to 4000ml')
+                    raise InvalidRange('during_training_urine_elimination', 'during_training_urine_elimination should be less than or equal to 4000ml')
 
             else:
                 during_training_urine_elimination = 0.0
@@ -241,11 +241,11 @@ class CreateTrainingController:
 
             # peso depois do treino precisa ser maior que 35kg
             if post_training_weight <= 35.0:
-                raise BadRequest('post_training_weight should be greater than or equal to 35kg')
+                raise InvalidRange('post_training_weight', 'post_training_weight should be greater than or equal to 35kg')
 
             # peso depois do treino não pode ser maior que 200kg
             if post_training_weight > 200.0:
-                raise BadRequest('post_training_weight should be less than or equal to 200kg')
+                raise InvalidRange('post_training_weight', 'post_training_weight should be less than or equal to 200kg')
 
             soaked_clothes = request.data.get('soaked_clothes')
 
@@ -264,7 +264,7 @@ class CreateTrainingController:
 
             # intensidade do treino precisa ser de 1 a 10
             if training_intensity < 1 or training_intensity > 10:
-                raise BadRequest('training_intensity should be between 1 and 10')
+                raise InvalidRange('training_intensity', 'training_intensity should be between 1 and 10')
 
             training = self.CreateTrainingUseCase(
                 user_id=user.user_id,
@@ -309,6 +309,12 @@ class CreateTrainingController:
 
         except BedrockIntegrationError as err:
             return ServiceUnavailable(body=err.message)
+
+        except ForbiddenAction as err:
+            return Forbidden(body=err.message)
+
+        except InvalidRange as err:
+            return BadRequest(body=err.message)
 
         except Exception as err:
             return InternalServerError(body=str(err))
