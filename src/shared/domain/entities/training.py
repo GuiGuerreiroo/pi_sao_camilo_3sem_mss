@@ -31,7 +31,7 @@ class Training(BaseModel):
     )
 
     # timestamp miliseconds
-    duration: int= Field(
+    duration: float= Field(
         description="Tempo total do treinamento em segundos"
     )
 
@@ -49,8 +49,9 @@ class Training(BaseModel):
         description="Cor da urina do usuário"
     )
 
-    pre_training_symptoms: list[SYMPTOMS]= Field(
-        description="Sintomas do usuário antes do treinamento"
+    pre_training_symptoms: list[SYMPTOMS] | None = Field(
+        description="Sintomas do usuário antes do treinamento",
+        default= None
     )
 
     pre_training_weight: float= Field(
@@ -61,23 +62,21 @@ class Training(BaseModel):
         description="Quantidade de hidratação do usuário antes do treinamento em ml"
     )
 
-    clothing_equipment: bool | None = Field(
-        description="Usuario esta fazendo o exercicio de short e camiseta ou sem camiseta e short",
-        default= True
-    )
-
     # --- DURANTE O TREINO ---
-    during_training_hydration: float= Field(
-        description="Quantidade de hidratação do usuário durante o treinamento em ml"
+    during_training_hydration: float | None = Field(
+        description="Quantidade de hidratação do usuário durante o treinamento em ml",
+        default= None
     )
 
-    during_trainin_urine_elimination: float= Field(
-        description="Quantidade de urina eliminada pelo usuário durante o treinamento em ml"
+    during_training_urine_elimination: float | None = Field(
+        description="Quantidade de urina eliminada pelo usuário durante o treinamento em ml",
+        default= None
     )
 
     # --- PÓS-TREINO ---
-    post_training_symptoms: list[SYMPTOMS]= Field(
-        description="Sintomas do usuário depois do treinamento"
+    post_training_symptoms: list[SYMPTOMS] | None = Field(
+        description="Sintomas do usuário depois do treinamento",
+        default= None
     )
 
     post_training_weight: float= Field(
@@ -96,16 +95,17 @@ class Training(BaseModel):
 
     # --- RESULTADOS COMPUTADOS ---
     weight_difference: float= Field(
-        description="Diferença de peso do usuário antes e depois do treinamento em Kg (Pré treino - Pós treino)"
+        description="Diferença de peso do usuário em Kg (Pré treino - Pós treino)"
     )
 
     ajusted_weight_difference: float= Field(
         description="Diferença de peso do usuário antes e depois do treinamento em Kg (Weight Difference (Kg) + During Training Hydratation (ml) - During Training Urine Elimination (ml)) unidade pode ser L ou Kg"
     )
 
-    hydric_balance: float= Field(
-        description="Balanço hidrico do usuário durante o treinamento em ml (During Training Hydratation (ml) - During Training Urine Elimination (ml))"
-    )
+    # pensar sobre esse campo
+    # hydric_balance: float= Field(
+    #     description="Balanço hidrico do usuário durante o treinamento em ml (During Training Hydratation (ml) - During Training Urine Elimination (ml))" CALCULO ESTA ERRADO AQUI E CORRETO NA ROTA
+    # )
 
     sudorese: float= Field(
         description="Quantidade de suor eliminado pelo usuário durante o treinamento em ml (Ajusted Weight Difference (L/Kg) / Duration (hours))"

@@ -46,16 +46,14 @@ class Test_TrainingRepositoryMock:
             pre_training_symptoms=[SYMPTOMS.NONE],
             pre_training_weight=65.0,
             pre_training_hydration=200.0,
-            clothing_equipment=True,
             during_training_hydration=100.0,
-            during_trainin_urine_elimination=0.0,
+            during_training_urine_elimination=0.0,
             post_training_symptoms=[SYMPTOMS.NONE],
             post_training_weight=64.8,
             soaked_clothes=False,
             training_intensity=4,
             weight_difference=0.2,
             ajusted_weight_difference=0.3,
-            hydric_balance=100.0,
             sudorese=0.3,
             weight_variation_percentage=0.3
         )
