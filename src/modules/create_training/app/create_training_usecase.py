@@ -111,7 +111,7 @@ class CreateTrainingUseCase:
                     'type': 'KNOWLEDGE_BASE',
                     'knowledgeBaseConfiguration': {
                         'knowledgeBaseId': self.knowledge_base_id,
-                        'modelArn': 'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-haiku-20241022-v1:0'
+                        'modelArn': 'arn:aws:bedrock:us-east-1::foundation-model/us.anthropic.claude-3-5-haiku-20241022-v1:0'
                     }
                 }
             )

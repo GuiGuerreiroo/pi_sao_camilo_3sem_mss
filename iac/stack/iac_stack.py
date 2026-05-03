@@ -126,7 +126,9 @@ class IacStack(Stack):
                 f"{self.bedrock_construct.knowledge_base.attr_knowledge_base_arn}/*",
                 
                 # give access to all LLMs
-                "arn:aws:bedrock:*::foundation-model/*"
+                "arn:aws:bedrock:*::foundation-model/*",
+                
+                "arn:aws:bedrock:*:*:inference-profile/*"
             ]
         )
 
