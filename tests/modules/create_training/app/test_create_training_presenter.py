@@ -92,13 +92,13 @@ class Test_CreateTrainingPresenter:
                 "timeEpoch": 1583348619267
             },
             "body": json.dumps({
-                "modality": "NATAÇÃO",
+                "modality": "NATACAO",
                 "start_date": start_date,
                 "end_date": end_date,
                 "duration": 60.0,
                 "environment_temperature": 25.0,
                 "environment_humidity": 60.0,
-                "urine_color": "YELLOW",
+                "urine_color": "AMARELO",
                 "pre_training_symptoms": [],
                 "pre_training_weight": 70.0,
                 "pre_training_hydration": 500.0,
@@ -124,5 +124,5 @@ class Test_CreateTrainingPresenter:
         assert response['statusCode'] == 201
         body = json.loads(response['body'])
         assert body['message'] == 'Training successfully created and reviewed by AI'
-        assert body['training']['modality'] == 'NATAÇÃO'
+        assert body['training']['modality'] == 'NATACAO'
         assert body['training']['user_id'] == user_id

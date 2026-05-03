@@ -30,13 +30,13 @@ class Test_CreateTrainingUseCase:
         
         training = usecase(
             user_id=user_id,
-            modality=MODALITY.SWIMMING,
+            modality=MODALITY.NATACAO,
             start_date=start_date,
             end_date=end_date,
             duration=60.0,
             environment_temperature=25.0,
             environment_humidity=60.0,
-            urine_color=URINE_COLOR.YELLOW,
+            urine_color=URINE_COLOR.AMARELO,
             pre_training_symptoms=[],
             pre_training_weight=70.0,
             pre_training_hydration=500.0,
@@ -50,7 +50,7 @@ class Test_CreateTrainingUseCase:
 
         assert training is not None
         assert training.user_id == user_id
-        assert training.modality == MODALITY.SWIMMING
+        assert training.modality == MODALITY.NATACAO
         assert training.ai_suggestion == 'Mocked AI feedback'
         
         usecase.client.retrieve_and_generate.assert_called_once()
@@ -73,13 +73,13 @@ class Test_CreateTrainingUseCase:
         with pytest.raises(BedrockIntegrationError) as exc_info:
             usecase(
                 user_id=user_id,
-                modality=MODALITY.SWIMMING,
+                modality=MODALITY.NATACAO,
                 start_date=start_date,
                 end_date=end_date,
                 duration=60.0,
                 environment_temperature=25.0,
                 environment_humidity=60.0,
-                urine_color=URINE_COLOR.YELLOW,
+                urine_color=URINE_COLOR.AMARELO,
                 pre_training_symptoms=[],
                 pre_training_weight=70.0,
                 pre_training_hydration=500.0,

@@ -17,7 +17,7 @@ class Test_TrainingRepositoryMock:
         assert training is not None
         assert training.user_id == "550e8400-e29b-41d4-a716-446655440002"
         assert training.training_id == "660e8400-e29b-41d4-a716-446655440002"
-        assert training.modality == MODALITY.RUNNING
+        assert training.modality == MODALITY.CORRIDA
 
     def test_get_training_not_found(self):
         repo = TrainingRepositoryMock()
@@ -36,13 +36,13 @@ class Test_TrainingRepositoryMock:
         repo = TrainingRepositoryMock()
         new_training = Training(
             user_id=str(uuid.uuid4()),
-            modality=MODALITY.WALKING,
+            modality=MODALITY.CAMINHADA,
             start_date=1630200000000,
             end_date=1630203600000,
             duration=3600,
             environment_temperature=20.0,
             environment_humidity=50.0,
-            urine_color=URINE_COLOR.TRANSLUCENT,
+            urine_color=URINE_COLOR.TRANSLUCIDO,
             pre_training_symptoms=[SYMPTOMS.NONE],
             pre_training_weight=65.0,
             pre_training_hydration=200.0,
@@ -63,7 +63,7 @@ class Test_TrainingRepositoryMock:
 
         assert len(repo.trainings) == initial_size + 1
         assert repo.trainings[-1].user_id == new_training.user_id
-        assert repo.trainings[-1].modality == MODALITY.WALKING
+        assert repo.trainings[-1].modality == MODALITY.CAMINHADA
 
     def test_delete_training(self):
         repo = TrainingRepositoryMock()

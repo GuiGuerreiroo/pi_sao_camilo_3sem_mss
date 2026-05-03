@@ -10,13 +10,13 @@ class Test_Training:
     def test_training_valid(self):
         training = Training(
             user_id=str(uuid.uuid4()),
-            modality=MODALITY.RUNNING,
+            modality=MODALITY.CORRIDA,
             start_date=1630000000000,
             end_date=1630003600000,
             duration=3600,
             environment_temperature=25.5,
             environment_humidity=60.0,
-            urine_color=URINE_COLOR.YELLOW,
+            urine_color=URINE_COLOR.AMARELO,
             pre_training_symptoms=[SYMPTOMS.NONE],
             pre_training_weight=70.0,
             pre_training_hydration=500.0,
@@ -33,19 +33,19 @@ class Test_Training:
             ai_suggestion="Great training!"
         )
         assert isinstance(training.training_id, str)
-        assert training.modality == MODALITY.RUNNING
+        assert training.modality == MODALITY.CORRIDA
 
     def test_training_invalid_user_id(self):
         with pytest.raises(ValidationError):
             Training(
                 user_id="invalid-uuid",
-                modality=MODALITY.RUNNING,
+                modality=MODALITY.CORRIDA,
                 start_date=1630000000000,
                 end_date=1630003600000,
                 duration=3600,
                 environment_temperature=25.5,
                 environment_humidity=60.0,
-                urine_color=URINE_COLOR.YELLOW,
+                urine_color=URINE_COLOR.AMARELO,
                 pre_training_symptoms=[SYMPTOMS.NONE],
                 pre_training_weight=70.0,
                 pre_training_hydration=500.0,
@@ -73,7 +73,7 @@ class Test_Training:
                 duration=3600,
                 environment_temperature=25.5,
                 environment_humidity=60.0,
-                urine_color=URINE_COLOR.YELLOW,
+                urine_color=URINE_COLOR.AMARELO,
                 pre_training_symptoms=[SYMPTOMS.NONE],
                 pre_training_weight=70.0,
                 pre_training_hydration=500.0,

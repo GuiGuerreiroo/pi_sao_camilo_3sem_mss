@@ -33,13 +33,13 @@ class Test_CreateTrainingController:
                 "email": "test@test.com",
                 "custom:role": "USER"
             },
-            "modality": "NATAÇÃO",
+            "modality": "NATACAO",
             "start_date": start_date,
             "end_date": end_date,
             "duration": 60.0,
             "environment_temperature": 25.0,
             "environment_humidity": 60.0,
-            "urine_color": "YELLOW",
+            "urine_color": "AMARELO",
             "pre_training_symptoms": [],
             "pre_training_weight": 70.0,
             "pre_training_hydration": 500.0,
@@ -56,7 +56,7 @@ class Test_CreateTrainingController:
         assert response.status_code == 201
         assert response.body['message'] == 'Training successfully created and reviewed by AI'
         assert response.body['training']['user_id'] == user_id
-        assert response.body['training']['modality'] == 'NATAÇÃO'
+        assert response.body['training']['modality'] == 'NATACAO'
         assert response.body['training']['ai_suggestion'] == 'Mocked AI feedback'
 
     def test_create_training_controller_missing_modality(self):
@@ -83,7 +83,7 @@ class Test_CreateTrainingController:
             "duration": 60.0,
             "environment_temperature": 25.0,
             "environment_humidity": 60.0,
-            "urine_color": "YELLOW",
+            "urine_color": "AMARELO",
             "pre_training_symptoms": [],
             "pre_training_weight": 70.0,
             "pre_training_hydration": 500.0,
