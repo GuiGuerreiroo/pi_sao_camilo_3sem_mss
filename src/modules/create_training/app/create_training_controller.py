@@ -59,11 +59,9 @@ class CreateTrainingController:
 
             if not isinstance(start_date, int):
                 raise WrongTypeParameter('start_date', 'int', type(start_date))
-
-            # validando que start_date esta em milissegundos
-            start_date_test = datetime.fromtimestamp(start_date / 1000)
             
-            if start_date_test.year < 2026:
+            # todo timestamp miliseconds tme 13 digitos
+            if len(str(start_date)) != 13:
                 raise InvalidRange('start_date', 'start_date must be in millisecond')
 
             end_date= request.data.get('end_date')
@@ -74,10 +72,8 @@ class CreateTrainingController:
             if not isinstance(end_date, int):
                 raise WrongTypeParameter('end_date', 'int', type(end_date))
 
-            # validando que end_date esta em milissegundos
-            end_date_test = datetime.fromtimestamp(end_date / 1000)
-            
-            if end_date_test.year < 2026:
+            # todo timestamp miliseconds tme 13 digitos
+            if len(str(end_date)) != 13:
                 raise InvalidRange('end_date', 'end_date must be in millisecond')
 
             # expected to be in minutes
