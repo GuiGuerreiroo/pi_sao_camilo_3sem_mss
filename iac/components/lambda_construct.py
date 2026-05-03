@@ -28,7 +28,7 @@ class LambdaConstruct(Construct):
             runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[self.lambda_layer],
             environment=environment_variables,
-            timeout=Duration.seconds(35)
+            timeout=Duration.seconds(29) #29 seconds because it is the time the api gateway still working before terminating the request
         )
 
         mss_api_resource.add_resource(
@@ -133,7 +133,13 @@ class LambdaConstruct(Construct):
             authorizer=authorizer
         )
 
-        
+        self.create_training= self.create_lambda_api_gateway_integration(
+            module_name="create_training",
+            method="POST",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
 
         self.functions_that_need_db_access= [
             self.create_user,
@@ -151,5 +157,6 @@ class LambdaConstruct(Construct):
         ]
 
         self.functions_that_need_bedrock_access= [
-            self.bedrock_ingestion
+            self.bedrock_ingestion,
+            self.create_training
         ]
