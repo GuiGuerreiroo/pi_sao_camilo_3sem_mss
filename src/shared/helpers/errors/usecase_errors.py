@@ -31,3 +31,7 @@ class UserAlreadyConfirmedError(BaseError):
 class DataIngestionError(BaseError):
     def __init__(self, message: str):
         super().__init__(f'Data ingestion failed: {message}')
+
+class BedrockIntegrationError(BaseError):
+    def __init__(self, message: str):
+        super().__init__(f'Error generating AI analysis: {message}')

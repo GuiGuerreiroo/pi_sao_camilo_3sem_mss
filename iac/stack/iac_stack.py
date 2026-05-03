@@ -49,8 +49,10 @@ class IacStack(Stack):
         # permitindo que a kb_role do bedrock leia arquivos do s3
         self.s3_bucket_construct.s3_bucket_context_files.grant_read(self.bedrock_construct.kb_role)
 
+        # permitindo que a role assumida pelo bedrock tenha acesso ao s3 vectors
         vector_bucket_policy=self.s3_vectors_bucket_construct.grant_bedrock_access(role_arn=self.bedrock_construct.kb_role.role_arn)
-
+        
+        # fazendo o bedrock esperar pela policy ser criada e atrelada a ele
         self.bedrock_construct.knowledge_base.node.add_dependency(vector_bucket_policy)
 
         ENVIRONMENT_VARIABLES= {
@@ -113,7 +115,8 @@ class IacStack(Stack):
             actions=[
                 "bedrock:RetrieveAndGenerate",
                 "bedrock:Retrieve",
-                "bedrock:StartIngestionJob"
+                "bedrock:StartIngestionJob",
+                "bedrock:InvokeModel"
             ],
             resources=[
                 # this one gives acces to the Kb it self
@@ -121,6 +124,9 @@ class IacStack(Stack):
                 
                 # this line line below it gives access to the datasource and Jobs inside KB
                 f"{self.bedrock_construct.knowledge_base.attr_knowledge_base_arn}/*"
+                
+                # give access to all LLMs
+                "arn:aws:bedrock:*::foundation-model/*"
             ]
         )
 
