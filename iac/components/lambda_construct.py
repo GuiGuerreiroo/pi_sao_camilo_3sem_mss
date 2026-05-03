@@ -145,7 +145,8 @@ class LambdaConstruct(Construct):
             self.create_user,
             self.get_user_function,
             self.confirm_user,
-            self.resend_code
+            self.resend_code,
+            self.create_training
         ]
 
         self.functions_that_need_cognito_iam_policy= [
