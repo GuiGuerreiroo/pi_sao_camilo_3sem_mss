@@ -1,78 +1,57 @@
-# from src.modules.delete_user.app.delete_user_controller import DeleteUserController
-# from src.modules.delete_user.app.delete_user_usecase import DeleteUserUsecase
-# from src.shared.helpers.external_interfaces.http_models import HttpRequest
-# from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
+from src.modules.delete_user.app.delete_user_controller import DeleteUserController
+from src.modules.delete_user.app.delete_user_usecase import DeleteUserUsecase
+from src.shared.helpers.external_interfaces.http_models import HttpRequest
+from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 
 
-# class Test_DeleteUserController:
-#     def test_delete_user_controller(self):
-#             repo = UserRepositoryMock()
-#             usecase = DeleteUserUsecase(repo=repo)
-#             controller = DeleteUserController(usecase=usecase)
+class Test_DeleteUserController:
+    def test_delete_user_controller(self):
+        repo = UserRepositoryMock()
+        usecase = DeleteUserUsecase(repo=repo)
+        controller = DeleteUserController(usecase=usecase)
 
-#             request = HttpRequest(body={
-#                 'user_id': '1'
-#             })
+        request = HttpRequest(body={
+            'requester_user': {
+                'name': 'Guilherme',
+                'email': '25.00178-5@maua.br',
+                'sub': '550e8400-e29b-41d4-a716-446655440002',
+                'custom:role': 'USER'
+            }
+        })
 
-#             response = controller(request=request)
+        response = controller(request=request)
 
-#             assert response.status_code == 200
-#             assert response.body['message'] == 'the user was deleted successfully'
+        assert response.status_code == 200
+        assert response.body['user']['name'] == 'Guilherme'
+        assert response.body['message'] == "User was deleted successfully"
 
-#     def test_delete_user_controller_wrong_type(self):
-#             repo = UserRepositoryMock()
-#             usecase = DeleteUserUsecase(repo=repo)
-#             controller = DeleteUserController(usecase=usecase)
+    def test_delete_user_controller_missing_requester_user(self):
+        repo = UserRepositoryMock()
+        usecase = DeleteUserUsecase(repo=repo)
+        controller = DeleteUserController(usecase=usecase)
 
-#             request = HttpRequest(body={
-#                 'user_id': 'a'
-#             })
+        request = HttpRequest(body={})
 
-#             response = controller(request=request)
+        response = controller(request=request)
 
-#             assert response.status_code == 400
-#             assert response.body == 'Field user_id is not valid'
+        assert response.status_code == 400
+        assert response.body == "Field requester_user is missing"
 
-#     def test_delete_user_controller_missing_parameter(self):
-#             repo = UserRepositoryMock()
-#             usecase = DeleteUserUsecase(repo=repo)
-#             controller = DeleteUserController(usecase=usecase)
+    def test_delete_user_not_found(self):
+        repo = UserRepositoryMock()
+        usecase = DeleteUserUsecase(repo=repo)
+        controller = DeleteUserController(usecase=usecase)
 
-#             request = HttpRequest(body={
-#                 'id': '1'
-#             })
+        request = HttpRequest(body={
+            'requester_user': {
+                'name': 'Nobody',
+                'email': 'nobody@maua.br',
+                'sub': 'non-existent',
+                'custom:role': 'USER'
+            }
+        })
 
-#             response = controller(request=request)
+        response = controller(request=request)
 
-#             assert response.status_code == 400
-#             assert response.body == 'Field user_id is missing'
-
-#     def test_delete_user_controller_invalid_user_id(self):
-#             repo = UserRepositoryMock()
-#             usecase = DeleteUserUsecase(repo=repo)
-#             controller = DeleteUserController(usecase=usecase)
-
-#             request = HttpRequest(body={
-#                 'user_id': 2
-#             })
-
-#             response = controller(request=request)
-
-#             assert response.status_code == 400
-#             assert response.body == "Field user_id isn't in the right type.\n Received: int.\n Expected: str"
-
-#     def test_delete_user_controller_no_items_found(self):
-#             repo = UserRepositoryMock()
-#             usecase = DeleteUserUsecase(repo=repo)
-#             controller = DeleteUserController(usecase=usecase)
-
-#             request = HttpRequest(body={
-#                 'user_id': '69'
-#             })
-
-#             response = controller(request=request)
-
-#             assert response.status_code == 404
-#             assert response.body == 'No items found for user_id'
-
-
+        assert response.status_code == 404
+        assert response.body == 'No items found for user'
