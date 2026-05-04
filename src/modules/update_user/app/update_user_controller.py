@@ -1,6 +1,7 @@
 from src.shared.helpers.external_interfaces.external_interface import IResponse, IRequest
 from .update_user_usecase import UpdateUserUsecase
-from .update_user_viewmodel import UpdateUserViewmodel
+from src.shared.domain.enums.role_enum import ROLE
+from src.shared.infra.dto.user_apigateway_dto import UserApiGatewayDTO
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
@@ -14,23 +15,47 @@ class UpdateUserController:
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
-            if request.data.get('user_id') is None:
-                raise MissingParameters('user_id')
-            if request.data.get('new_name') is None:
-                raise MissingParameters('new_name')
+            if request.data.get('requester_user') is None:
+                raise MissingParameters('requester_user')
 
-            if type(request.data.get('user_id')) != str:
-                raise WrongTypeParameter(
-                    fieldName="user_id",
-                    fieldTypeExpected="str",
-                    fieldTypeReceived=request.data.get('user_id').__class__.__name__
-                )
+            requester_user = UserApiGatewayDTO.from_api_gateway(request.data.get('requester_user'))
 
-            user = self.UpdateUserUsecase(user_id=int(request.data.get('user_id')), new_name=request.data.get('new_name'))
+            if not isinstance(requester_user.user_id, str):
+                raise WrongTypeParameter('user_id', 'str', type(requester_user.user_id))
 
-            viewmodel = UpdateUserViewmodel(user=user)
+            new_name = request.data.get('new_name')
+            if new_name is not None:
+                if not isinstance(new_name, str):
+                    raise WrongTypeParameter('new_name', 'str', type(new_name))
+            
+            new_email = request.data.get('new_email')
+            if new_email is not None:   
+                if not isinstance(new_email, str):
+                    raise WrongTypeParameter('new_email', 'str', type(new_email))
 
-            return OK(viewmodel.to_dict())
+            # won't be allowed to change ROLE
+
+            new_height = request.data.get('new_height')
+            if new_height is not None:
+                if not isinstance(new_height, float):
+                    if isinstance(new_height, int):
+                        new_height = float(new_height)
+                    else:
+                        raise WrongTypeParameter('new_height', 'float', type(new_height))
+
+            user = self.UpdateUserUsecase(
+                user_id=requester_user.user_id, 
+                new_name=new_name,
+                new_email=new_email,
+                new_height=new_height
+            )
+
+            viewmodel = {
+                'user': user.model_dump(mode='json', exclude_none=True),
+                'message': 'the user was updated successfully'
+            }
+
+            return OK(viewmodel)
 
         except NoItemsFound as err:
 
@@ -50,4 +75,4 @@ class UpdateUserController:
 
         except Exception as err:
 
-            return InternalServerError(body=err.args[0])
+            return InternalServerError(body=str(err))

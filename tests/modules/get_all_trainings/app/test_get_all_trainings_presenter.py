@@ -1,10 +1,9 @@
 import json
 
-from src.modules.get_all_users.app.get_all_users_presenter import lambda_handler
+from src.modules.get_all_trainings.app.get_all_trainings_presenter import lambda_handler
 
-
-class Test_GetAllUsersPresenter:
-    def test_get_all_users_presenter(self):
+class Test_GetAllTrainingsPresenter:
+    def test_get_all_trainings_presenter(self):
         event = {
             "version": "2.0",
             "routeKey": "$default",
@@ -27,10 +26,10 @@ class Test_GetAllUsersPresenter:
                 "authentication": None,
                 "authorizer": {
                     "claims": {
-                        "name": "João",
-                        "email": "21.00678-2@maua.br",
-                        "sub": "550e8400-e29b-41d4-a716-446655440001",
-                        "custom:role": "ADM"
+                        "name": "Guilherme",
+                        "email": "25.00178-5@maua.br",
+                        "sub": "550e8400-e29b-41d4-a716-446655440002",
+                        "custom:role": "USER"
                     }
                 },
                 "domainName": "<url-id>.lambda-url.us-west-2.on.aws",
@@ -59,7 +58,7 @@ class Test_GetAllUsersPresenter:
         assert response["statusCode"] == 200
         
         body = json.loads(response["body"])
-        assert "users" in body
-        assert type(body["users"]) == list
-        assert len(body["users"]) > 0
-        assert body["message"] == "All users has been retrieved"
+        assert "trainings" in body
+        assert type(body["trainings"]) == list
+        assert len(body["trainings"]) > 0
+        assert body["message"] == "Trainings returned successfully"

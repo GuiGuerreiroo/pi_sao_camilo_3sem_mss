@@ -10,9 +10,8 @@ from src.shared.domain.repositories.user_repository_interface import IUserReposi
 from botocore.exceptions import ClientError
 from src.shared.helpers.errors.usecase_errors import BedrockIntegrationError
 class CreateTrainingUseCase:
-    def __init__(self, repo: ITrainingRepository, repo_user: IUserRepository):
+    def __init__(self, repo: ITrainingRepository):
         self.repo = repo
-        self.repo_user = repo_user
 
         self.client= boto3.client('bedrock-agent-runtime')
         self.knowledge_base_id= Environments.get_envs().knowledge_base_id

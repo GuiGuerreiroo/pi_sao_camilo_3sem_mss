@@ -28,14 +28,7 @@ class CreateTrainingController:
             if not isinstance(requester_user.user_id, str):
                 raise WrongTypeParameter('user_id', 'str', type(requester_user.user_id))
 
-            user = self.CreateTrainingUseCase.repo_user.get_user(
-                user_id=requester_user.user_id
-            )
-
-            if not user:
-                raise NoItemsFound('user')
-
-            if user.role != ROLE.USER:
+            if requester_user.role != ROLE.USER.value:
                 raise ForbiddenAction("user")
 
             # timestamp em milissegundos do momento atual
@@ -263,7 +256,7 @@ class CreateTrainingController:
                 raise InvalidRange('training_intensity', 'training_intensity should be between 1 and 10')
 
             training = self.CreateTrainingUseCase(
-                user_id=user.user_id,
+                user_id=requester_user.user_id,
                 modality=modality_enum,
                 start_date=start_date,
                 end_date=end_date,

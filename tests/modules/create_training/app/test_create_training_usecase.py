@@ -14,7 +14,7 @@ class Test_CreateTrainingUseCase:
     def test_create_training(self):
         repo = TrainingRepositoryMock()
         repo_user = UserRepositoryMock()
-        usecase = CreateTrainingUseCase(repo=repo, repo_user=repo_user)
+        usecase = CreateTrainingUseCase(repo=repo)
         
         # mock the bedrock client
         usecase.client = MagicMock()
@@ -60,7 +60,7 @@ class Test_CreateTrainingUseCase:
     def test_create_training_bedrock_client_error(self):
         repo = TrainingRepositoryMock()
         repo_user = UserRepositoryMock()
-        usecase = CreateTrainingUseCase(repo=repo, repo_user=repo_user)
+        usecase = CreateTrainingUseCase(repo=repo)
         
         usecase.client = MagicMock()
         error_response = {'Error': {'Message': 'Bedrock temporary failure'}}

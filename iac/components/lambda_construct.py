@@ -101,6 +101,14 @@ class LambdaConstruct(Construct):
             # essa rota nao tem authorizer
         )
 
+        self.get_all_users= self.create_lambda_api_gateway_integration(
+            module_name="get_all_users",
+            method="GET",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
+
         self.refresh_token= self.create_lambda_api_gateway_integration(
             module_name="refresh_token",
             method="POST",
@@ -136,6 +144,14 @@ class LambdaConstruct(Construct):
         self.create_training= self.create_lambda_api_gateway_integration(
             module_name="create_training",
             method="POST",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
+
+        self.get_all_users= self.create_lambda_api_gateway_integration(
+            module_name="get_all_users",
+            method="GET",
             mss_api_resource=apigateway_resource,
             environment_variables=environment_variables,
             authorizer=authorizer

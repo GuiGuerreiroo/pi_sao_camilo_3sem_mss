@@ -12,7 +12,7 @@ class Test_CreateTrainingController:
     def test_create_training_controller(self):
         repo = TrainingRepositoryMock()
         repo_user = UserRepositoryMock()
-        usecase = CreateTrainingUseCase(repo=repo, repo_user=repo_user)
+        usecase = CreateTrainingUseCase(repo=repo)
         usecase.client = MagicMock()
         usecase.client.retrieve_and_generate.return_value = {
             'output': {
@@ -62,7 +62,7 @@ class Test_CreateTrainingController:
     def test_create_training_controller_missing_modality(self):
         repo = TrainingRepositoryMock()
         repo_user = UserRepositoryMock()
-        usecase = CreateTrainingUseCase(repo=repo, repo_user=repo_user)
+        usecase = CreateTrainingUseCase(repo=repo)
         
         controller = CreateTrainingController(usecase=usecase)
 
