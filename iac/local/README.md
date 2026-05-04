@@ -111,13 +111,13 @@ Finally, you can run the `load_user_mock_to_dynamo` script to load mock data int
 5. Then, make sure you are in the root directory of your project again
 6. Run the following command to execute the script:
    ```
-   py -m src.shared.infra.repositories.load_user_mock_to_dynamo
+   py -m src.shared.infra.repositories.load_mocks_to_dynamo
 
-   python3 -m src.shared.infra.repositories.load_user_mock_to_dynamo
+   python3 -m src.shared.infra.repositories.load_mocks_to_dynamo
    ```
 
 
-This command will run the `load_user_mock_to_dynamo` script and populate DynamoDB with the provided mock data
+This command will run the `load_mocks_to_dynamo` script and populate DynamoDB with the provided mock data
 
 ## Launch NoSQL WorkBench
 
