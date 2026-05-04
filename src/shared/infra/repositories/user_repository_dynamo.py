@@ -58,11 +58,19 @@ class UserRepositoryDynamo(IUserRepository):
 
         return user
     
-    # for now I don't need this method
-    # def get_all_user(self) -> List[User]:
-    #     users= self.dynamo.scan_items
-
-    #     return users
+    def get_all_users(self) -> List[User]:
+        filter_exp = Attr(self.dynamo.sort_key).eq(self.sort_key_format())
+        items_dict = self.dynamo.scan_items(filter_expression=filter_exp)
+        items = items_dict.get("Items", [])
+        
+        users = []
+        for item in items:
+            item["user_id"] = self.remove_prefix(item["user_id"])
+            item.pop("PK", None)
+            item.pop("SK", None)
+            users.append(User.model_validate(item))
+            
+        return users
 
     def get_user_by_email(self, email: str) -> Optional[User]:
         # filter_expression= f"email = :email"
@@ -119,7 +127,6 @@ class UserRepositoryDynamo(IUserRepository):
         user_id: str,
         new_name: str | None, 
         new_email: str | None,
-        new_role: ROLE | None, 
         new_height: float | None
     ) -> Optional[User]:
 
@@ -136,11 +143,10 @@ class UserRepositoryDynamo(IUserRepository):
         if new_email:
             item_to_update["email"]= new_email
 
-        if new_role:
-            item_to_update["role"]= new_role.value
-
         if new_height:
             item_to_update["height"]= new_height
+
+        # new_role will not be changed, so we don't need to update it
         
 
         update = self.dynamo.update_item(

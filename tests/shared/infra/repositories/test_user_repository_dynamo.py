@@ -97,7 +97,6 @@ class Test_UserRepositoryDynamo:
             user_id=user_to_update.user_id,
             new_name="Vitor Soller Soller",
             new_email=None,
-            new_role=None,
             new_height=None
         )
 
@@ -127,3 +126,28 @@ class Test_UserRepositoryDynamo:
 
         # Clean up
         user_repository.delete_user(user_to_confirm.user_id)
+
+    @pytest.mark.skip(reason="Needs dynamoDB")
+    def test_get_all_users(self):
+        os.environ["STAGE"] = "TEST"
+
+        user_repository = UserRepositoryDynamo()
+        
+        # Optionally create a user to ensure the list is not empty
+        new_user = User(
+            user_id=str(uuid.uuid4()),
+            name="Test Dynamo Get All",
+            email="test.dynamo.getall@maua.br",
+            role=ROLE.USER,
+            height=1.80
+        )
+        user_repository.create_user(new_user)
+
+        resp = user_repository.get_all_users()
+
+        assert type(resp) == list
+        assert len(resp) >= 1
+        assert any(u.user_id == new_user.user_id for u in resp)
+
+        # Clean up
+        user_repository.delete_user(new_user.user_id)

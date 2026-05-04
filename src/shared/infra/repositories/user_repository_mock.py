@@ -70,8 +70,8 @@ class UserRepositoryMock(IUserRepository):
                 return user
         return None
 
-    # def get_all_users(self) -> List[User]:
-    #     return self.users.copy()
+    def get_all_users(self) -> List[User]:
+        return self.users.copy()
     
     def create_user(self, new_user: User) -> Optional[User]:
         self.users.append(new_user)
@@ -89,7 +89,6 @@ class UserRepositoryMock(IUserRepository):
         user_id: str, 
         name: str | None, 
         new_email: str | None,
-        new_role: ROLE | None, 
         new_height: float | None
     ) -> Optional[User]:
         for user in self.users:
@@ -98,8 +97,6 @@ class UserRepositoryMock(IUserRepository):
                     user.name = name
                 if new_email is not None:
                     user.email = new_email
-                if new_role is not None:
-                    user.role = new_role
                 if new_height is not None:
                     user.height = new_height
                 return user

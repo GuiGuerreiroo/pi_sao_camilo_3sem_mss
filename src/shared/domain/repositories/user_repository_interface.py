@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
 
 from src.shared.domain.entities.user import User
 from src.shared.domain.enums.role_enum import ROLE
@@ -15,10 +15,9 @@ class IUserRepository(ABC):
         pass
 
 
-    # for now don't need
-    # @abstractmethod
-    # def get_all_users(self) -> List[User]:
-    #     pass
+    @abstractmethod
+    def get_all_users(self) -> List[User]:
+        pass
 
     def get_user_by_email(self, email: str) -> Optional[User]:
         """
@@ -43,12 +42,12 @@ class IUserRepository(ABC):
         user_id: str, 
         name: str | None, 
         new_email: str | None,
-        new_role: ROLE | None, 
         new_height: float | None
     ) -> Optional[User]:
         """
         If user not found return None
         """
+        # new_role will not be changed
         pass
     
     @abstractmethod
