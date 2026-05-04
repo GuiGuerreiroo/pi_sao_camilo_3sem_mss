@@ -122,6 +122,8 @@ class DynamoDatasource:
 
         # remove se a opcao aparecer
         if update_dict:
+            update_dict = DynamoDatasource._parse_float_to_decimal(update_dict)
+            
             data_pairs = list(update_dict.items())
             set_parts = [f"#attr{i} = :val{i}" for i in range(len(data_pairs))]
             update_expression_parts.append("SET " + ", ".join(set_parts))
