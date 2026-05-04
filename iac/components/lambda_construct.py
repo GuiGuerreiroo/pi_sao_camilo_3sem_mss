@@ -80,7 +80,7 @@ class LambdaConstruct(Construct):
             compatible_runtimes=[lambda_.Runtime.PYTHON_3_13]
         )
 
-        self.bedrock_ingestion= self.create_background_lambda(
+        self.bedrock_ingestion_function= self.create_background_lambda(
             module_name="bedrock_ingestion",
             environment_variables=environment_variables
         )
@@ -93,7 +93,7 @@ class LambdaConstruct(Construct):
             # essa rota nao tem authorizer
         )
 
-        self.create_user= self.create_lambda_api_gateway_integration(
+        self.create_user_function= self.create_lambda_api_gateway_integration(
             module_name="create_user",
             method="POST",
             mss_api_resource=apigateway_resource,
@@ -101,7 +101,7 @@ class LambdaConstruct(Construct):
             # essa rota nao tem authorizer
         )
 
-        self.get_all_users= self.create_lambda_api_gateway_integration(
+        self.get_all_users_function= self.create_lambda_api_gateway_integration(
             module_name="get_all_users",
             method="GET",
             mss_api_resource=apigateway_resource,
@@ -109,7 +109,7 @@ class LambdaConstruct(Construct):
             authorizer=authorizer
         )
 
-        self.refresh_token= self.create_lambda_api_gateway_integration(
+        self.refresh_token_function= self.create_lambda_api_gateway_integration(
             module_name="refresh_token",
             method="POST",
             mss_api_resource=apigateway_resource,
@@ -117,7 +117,7 @@ class LambdaConstruct(Construct):
              # essa rota nao tem authorizer
         )
 
-        self.confirm_user = self.create_lambda_api_gateway_integration(
+        self.confirm_user_function= self.create_lambda_api_gateway_integration(
             module_name="confirm_user",
             method="POST",
             mss_api_resource=apigateway_resource,
@@ -125,7 +125,7 @@ class LambdaConstruct(Construct):
             # essa rota nao tem authorizer
         )
 
-        self.resend_code= self.create_lambda_api_gateway_integration(
+        self.resend_code_function= self.create_lambda_api_gateway_integration(
             module_name="resend_code",
             method="POST",
             mss_api_resource=apigateway_resource,
@@ -141,7 +141,7 @@ class LambdaConstruct(Construct):
             authorizer=authorizer
         )
 
-        self.create_training= self.create_lambda_api_gateway_integration(
+        self.create_training_function= self.create_lambda_api_gateway_integration(
             module_name="create_training",
             method="POST",
             mss_api_resource=apigateway_resource,
@@ -149,8 +149,8 @@ class LambdaConstruct(Construct):
             authorizer=authorizer
         )
 
-        self.get_all_users= self.create_lambda_api_gateway_integration(
-            module_name="get_all_users",
+        self.get_all_trainings_function= self.create_lambda_api_gateway_integration(
+            module_name="get_all_trainings",
             method="GET",
             mss_api_resource=apigateway_resource,
             environment_variables=environment_variables,
@@ -158,22 +158,24 @@ class LambdaConstruct(Construct):
         )
 
         self.functions_that_need_db_access= [
-            self.create_user,
+            self.create_user_function,
+            self.get_all_users_function,
             self.get_user_function,
-            self.confirm_user,
-            self.resend_code,
-            self.create_training
+            self.confirm_user_function,
+            self.resend_code_function,
+            self.create_training_function,
+            self.get_all_trainings_function
         ]
 
         self.functions_that_need_cognito_iam_policy= [
-            self.create_user,
+            self.create_user_function,
             self.auth_user_function,
-            self.refresh_token,
-            self.confirm_user,
-            self.resend_code
+            self.refresh_token_function,
+            self.confirm_user_function,
+            self.resend_code_function
         ]
 
         self.functions_that_need_bedrock_access= [
-            self.bedrock_ingestion,
-            self.create_training
+            self.bedrock_ingestion_function,
+            self.create_training_function
         ]
