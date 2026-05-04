@@ -45,7 +45,6 @@ class CreateTrainingUseCase:
         
         # pensar sobre esse campo
         # hydric_balance = post_training_weight - pre_training_weight
-
         pre_training_hydration_target_min = int(pre_training_weight * 5)
         pre_training_hydration_target_max = int(pre_training_weight * 10)
 
@@ -55,18 +54,44 @@ class CreateTrainingUseCase:
         # duration vira em minutos, portanto temos que transformar para horas dividindo por 60
         sudorese = ajusted_weight_difference / (duration/60)
 
-        prompt= f'''
+
+
+        # aredondando 2 casas decimais 
+        weight_difference = round(weight_difference, 2)
+        ajusted_weight_difference = round(ajusted_weight_difference, 2)
+        sudorese = round(sudorese, 2)
+        weight_variation_percentage = round(weight_variation_percentage, 2)
+
+
+        # formatando valores para o padrao brasileiro
+        weight_diff_br = f"{weight_difference:.2f}".replace('.', ',')
+        ajusted_weight_br = f"{ajusted_weight_difference:.2f}".replace('.', ',')
+        sudorese_br = f"{sudorese:.2f}".replace('.', ',')
+        weight_var_br = f"{weight_variation_percentage:.2f}".replace('.', ',')
+        
+        # Formatando as temperaturas e pesos originais também por garantia
+        temp_br = f"{environment_temperature:.1f}".replace('.', ',')
+        peso_br = f"{pre_training_weight:.1f}".replace('.', ',')
+
+        search_query = f"Diretrizes de reposição hídrica, hidratação, taxa de sudorese e cor da urina para um treino de {duration} minutos."
+
+
+        system_prompt_template= f'''
             <system_prompt>
             Você é um nutricionista esportivo. Use EXCLUSIVAMENTE as informações da sua base de conhecimento para responder. Não utilize conhecimentos prévios.
             </system_prompt>
 
+            <base_de_conhecimento>
+            $search_results$
+            </base_de_conhecimento>
+
             <athlete_data>
             - Modalidade: {modality} (Duração: {duration} minutos)
-            - Ambiente: {environment_temperature}°C com {environment_humidity}% de umidade
-            - Peso corporal: {pre_training_weight} kg
-            - Perda de peso: {weight_difference} kg ({weight_variation_percentage}% do peso corporal)
+            - Ambiente: {temp_br}°C com {environment_humidity}% de umidade
+            - Peso corporal: {peso_br} kg
+            - Perda de peso: {weight_diff_br} kg ({weight_var_br}% do peso corporal)
             - Total ingerido: {during_training_hydration} mL
-            - Taxa de sudorese: {sudorese} L/h
+            - Taxa de sudorese: {sudorese_br} L/h
             - Urina pós-treino: {urine_color}
             - Roupas encharcadas: {soaked_clothes}
             - Intensidade do treino: {training_intensity}/10
@@ -105,13 +130,18 @@ class CreateTrainingUseCase:
         try:
             response= self.client.retrieve_and_generate(
                 input={
-                    'text': prompt
+                    'text': search_query
                 },
                 retrieveAndGenerateConfiguration={
                     'type': 'KNOWLEDGE_BASE',
                     'knowledgeBaseConfiguration': {
                         'knowledgeBaseId': self.knowledge_base_id,
-                        'modelArn': 'us.anthropic.claude-3-5-haiku-20241022-v1:0'
+                        'modelArn': 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
+                        'generationConfiguration': {
+                            'promptTemplate': {
+                                'textPromptTemplate': system_prompt_template
+                            }
+                        }
                     }
                 }
             )
