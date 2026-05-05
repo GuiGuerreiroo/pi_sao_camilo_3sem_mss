@@ -57,6 +57,6 @@ class Test_GetAllGroupsBySupporterPresenter:
         assert response["statusCode"] == 200
         
         body = json.loads(response["body"])
-        assert body["message"] == "Trainings athletes linked to the supporter retrieved successfully"
+        assert body["message"] == "Trainings andathletes linked to the supporter retrieved successfully"
         assert len(body["groups"]) == 2
         assert body["groups"][0]["group_id"] == "660e8400-e29b-41d4-a716-446655440001"

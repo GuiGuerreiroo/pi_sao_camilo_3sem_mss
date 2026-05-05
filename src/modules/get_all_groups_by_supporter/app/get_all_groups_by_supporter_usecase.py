@@ -1,14 +1,14 @@
 from src.shared.domain.entities.user import User
-import uuid
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
 from src.shared.domain.repositories.group_repository_interface import IGroupRepository
 from src.shared.domain.repositories.user_repository_interface import IUserRepository
-
+from src.shared.domain.repositories.training_repository_interface import ITrainingRepository
 
 class GetAllGroupsBySupporterUseCase:
-    def __init__(self, repo: IGroupRepository, user_repo: IUserRepository):
+    def __init__(self, repo: IGroupRepository, user_repo: IUserRepository, training_repo: ITrainingRepository):
         self.repo = repo
         self.user_repo = user_repo
+        self.training_repo = training_repo
 
     def __call__(
         self, 
@@ -30,18 +30,15 @@ class GetAllGroupsBySupporterUseCase:
                 if athlete is None:
                         raise NoItemsFound("No athlete found for the given user id")
 
-                athletes_list.append(athlete)
-            
-            for supporter_id in group.supporter_list_id:
-                supporter = self.user_repo.get_user(supporter_id)
-                if supporter is None:
-                    raise NoItemsFound("No supporter found for the given user id")
-                
-                supporter_list.append(supporter)
+                athlete_trainings = self.training_repo.get_all_trainings_by_user(athlete_id)
+
+                athletes_list.append({
+                    "athlete_data": athlete,
+                    "trainings_data": athlete_trainings
+                })
 
             groups_list[group.group_id] = {
-                "athletes_list_id": athletes_list,
-                "supporter_list_id": supporter_list
+                "athletes_list": athletes_list,
             }
 
 

@@ -5,8 +5,9 @@ from src.shared.helpers.external_interfaces.http_lambda_requests import LambdaHt
 
 repo = Environments.get_group_repo()
 user_repo = Environments.get_user_repo()
+training_repo= Environments.get_training_repo()
 
-usecase = GetAllGroupsBySupporterUseCase(repo, user_repo)
+usecase = GetAllGroupsBySupporterUseCase(repo, user_repo, training_repo)
 controller = GetAllGroupsBySupporterController(usecase)
 
 def lambda_handler(event, context):

@@ -33,12 +33,20 @@ class GetAllGroupsBySupporterController:
                 "groups": [
                     {
                         "group_id": str(group_id),
-                        "athletes_list_id": [athlete.model_dump(mode="json", exclude_none=True) for athlete in group_data["athletes_list_id"]],
-                        "supporter_list_id": [supporter.model_dump(mode="json", exclude_none=True) for supporter in group_data["supporter_list_id"]],
+                        "athletes_list": [
+                            {
+                                **athlete_data["athlete_data"].model_dump(mode="json", exclude_none=True),
+                                "trainings": [
+                                    training.model_dump(mode="json", exclude_none=True)
+                                    for training in athlete_data["trainings_data"]
+                                ]
+                            }
+                            for athlete_data in group_data["athletes_list"]
+                        ]
                     }
                     for group_id, group_data in groups.items()
                 ],
-                "message": "Trainings athletes linked to the supporter retrieved successfully"
+                "message": "Trainings andathletes linked to the supporter retrieved successfully"
             }
 
             return OK(viewmodel)
