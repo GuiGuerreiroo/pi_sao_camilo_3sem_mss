@@ -11,3 +11,7 @@ class WrongTypeParameter(BaseError):
 class InvalidRange(BaseError):
     def __init__(self, fieldName: str, message: str):
         super().__init__(f'Field {fieldName} is out of range. {message}')
+
+class MissingItemsError(BaseError):
+    def __init__(self, fieldName: str, message: str):
+        super().__init__(f'Field {fieldName} is empty. {message}')

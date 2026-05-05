@@ -6,6 +6,8 @@ from src.shared.infra.repositories.user_repository_dynamo import UserRepositoryD
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 from src.shared.infra.repositories.training_repository_dynamo import TrainingRepositoryDynamo
 from src.shared.infra.repositories.training_repository_mock import TrainingRepositoryMock
+from src.shared.infra.repositories.group_repository_dynamo import GroupRepositoryDynamo
+from src.shared.infra.repositories.group_repository_mock import GroupRepositoryMock
 from src.shared.environments import Environments
 
 def setup_dynamo_table():
@@ -79,9 +81,13 @@ def load_mock_to_local_dynamo():
     
     training_mock_repo = TrainingRepositoryMock()
     training_dynamo_repo = TrainingRepositoryDynamo()
+    
+    group_mock_repo = GroupRepositoryMock()
+    group_dynamo_repo = GroupRepositoryDynamo()
 
     user_count = 0
     training_count = 0
+    group_count = 0
 
     print('Loading mock user data to dynamo...')
     for user in user_mock_repo.users:
@@ -97,6 +103,13 @@ def load_mock_to_local_dynamo():
         training_count += 1
     print(f"{training_count} trainings loaded to dynamo!")
 
+    print('Loading mock group data to dynamo...')
+    for group in group_mock_repo.groups:
+        print(f"Loading group {group.group_id} to dynamo")
+        group_dynamo_repo.create_group(group)
+        group_count += 1
+    print(f"{group_count} groups loaded to dynamo!")
+
 
 def load_mock_to_real_dynamo():
     user_mock_repo = UserRepositoryMock()
@@ -104,9 +117,13 @@ def load_mock_to_real_dynamo():
     
     training_mock_repo = TrainingRepositoryMock()
     training_dynamo_repo = TrainingRepositoryDynamo()
+    
+    group_mock_repo = GroupRepositoryMock()
+    group_dynamo_repo = GroupRepositoryDynamo()
 
     user_count = 0
     training_count = 0
+    group_count = 0
 
     print('Loading mock user data to real dynamo...')
     for user in user_mock_repo.users:
@@ -121,6 +138,13 @@ def load_mock_to_real_dynamo():
         training_dynamo_repo.create_training(training)
         training_count += 1
     print(f"{training_count} trainings loaded to dynamo!")
+
+    print('Loading mock group data to real dynamo...')
+    for group in group_mock_repo.groups:
+        print(f"Loading group {group.group_id} to dynamo")
+        group_dynamo_repo.create_group(group)
+        group_count += 1
+    print(f"{group_count} groups loaded to dynamo!")
 
 
 if __name__ == '__main__':
