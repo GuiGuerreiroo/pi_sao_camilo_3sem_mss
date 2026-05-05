@@ -157,6 +157,38 @@ class LambdaConstruct(Construct):
             authorizer=authorizer
         )
 
+        self.create_group_function= self.create_lambda_api_gateway_integration(
+            module_name="create_group",
+            method="POST",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
+
+        self.update_group_function= self.create_lambda_api_gateway_integration(
+            module_name="update_group",
+            method="PUT",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
+
+        self.delete_group_function= self.create_lambda_api_gateway_integration(
+            module_name="delete_group",
+            method="DELETE",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
+
+        self.get_all_groups_by_supporter_function= self.create_lambda_api_gateway_integration(
+            module_name="get_all_groups_by_supporter",
+            method="GET",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
+
         self.functions_that_need_db_access= [
             self.create_user_function,
             self.get_all_users_function,
@@ -164,7 +196,11 @@ class LambdaConstruct(Construct):
             self.confirm_user_function,
             self.resend_code_function,
             self.create_training_function,
-            self.get_all_trainings_function
+            self.get_all_trainings_function,
+            self.create_group_function,
+            self.update_group_function,
+            self.delete_group_function,
+            self.get_all_groups_by_supporter_function
         ]
 
         self.functions_that_need_cognito_iam_policy= [
