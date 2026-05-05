@@ -1,3 +1,4 @@
+from src.shared.domain.repositories.group_repository_interface import IGroupRepository
 from src.shared.domain.repositories.training_repository_interface import ITrainingRepository
 import enum
 from enum import Enum
@@ -93,6 +94,17 @@ class Environments:
         elif Environments.get_envs().stage in [STAGE.DEV, STAGE.HOMOLOG, STAGE.PROD]:
             from src.shared.infra.repositories.training_repository_dynamo import TrainingRepositoryDynamo
             return TrainingRepositoryDynamo()
+        else:
+            raise Exception("No repository found for this stage")
+
+    @staticmethod
+    def get_group_repo() -> IGroupRepository:
+        if Environments.get_envs().stage == STAGE.TEST:
+            from src.shared.infra.repositories.group_repository_mock import GroupRepositoryMock
+            return GroupRepositoryMock()
+        elif Environments.get_envs().stage in [STAGE.DEV, STAGE.HOMOLOG, STAGE.PROD]:
+            from src.shared.infra.repositories.group_repository_dynamo import GroupRepositoryDynamo
+            return GroupRepositoryDynamo()
         else:
             raise Exception("No repository found for this stage")
 

@@ -33,6 +33,7 @@ class UserRepositoryMock(IUserRepository):
                 expires_at=None           
             ),
             User(
+                user_id="cde87c2e-d1ab-4bb1-8630-189f2d2c8c6a",
                 name="Heitor", 
                 email="21.00453-7@maua.br", 
                 role=ROLE.USER, 
@@ -50,6 +51,7 @@ class UserRepositoryMock(IUserRepository):
                 expires_at=self.future_time      
             ),
             User(
+                user_id="e0cce9ad-e3ec-41f0-8600-812198c49450",
                 name="Pedro", 
                 email="20.00789-4@maua.br", 
                 role=ROLE.SUPPORT, 
