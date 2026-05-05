@@ -1,19 +1,20 @@
+from uuid import UUID
 from pydantic import *
 from typing import List
 import uuid
 
 
 class Group(BaseModel):
-    group_id: UUID4= Field(
+    group_id: UUID= Field(
         description="Id do grupo",
         default_factory=lambda: str(uuid.uuid4())
     )
 
-    athlete_list_id: List[UUID4]= Field(
+    athlete_list_id: List[UUID]= Field(
         description="Lista de ids dos atletas",
     )
 
-    supporter_list_id: List[UUID4]= Field(
+    supporter_list_id: List[UUID]= Field(
         description="Lista de ids dos apoiadores",
     )
 
