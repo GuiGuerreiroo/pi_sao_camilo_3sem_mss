@@ -64,7 +64,7 @@ class CreateUserController:
                 name=name,
                 password=password,
                 role=role_enum,
-                height=height
+                height=height if role_enum == ROLE.USER else None
             )
 
             viewmodel = {
