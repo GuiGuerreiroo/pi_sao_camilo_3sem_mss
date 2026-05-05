@@ -1,7 +1,7 @@
 from src.shared.helpers.external_interfaces.http_codes import OK
 from src.shared.domain.enums.role_enum import ROLE
 from src.shared.infra.dto.user_apigateway_dto import UserApiGatewayDTO
-from src.modules.get_all_groups_by_supporter.app.get_all_groups_by_supporter_usecase import GetAllGroupsBySupporterUseCase
+from .get_all_groups_by_supporter_usecase import GetAllGroupsBySupporterUseCase
 from src.shared.helpers.external_interfaces.external_interface import IRequest, IResponse
 from src.shared.helpers.errors.usecase_errors import NoItemsFound, ForbiddenAction
 from src.shared.helpers.external_interfaces.http_codes import NotFound, BadRequest, InternalServerError, Forbidden
