@@ -43,7 +43,7 @@ class CreateTrainingController:
                 modality_enum = MODALITY(modality)
 
             except ValueError:
-                raise WrongTypeParameter('modality', f"one of {[modality.name for modality in MODALITY]}", modality)
+                raise WrongTypeParameter('modality', f"one of {[m.value for m in MODALITY]}", modality)
 
             start_date= request.data.get('start_date')
 
@@ -126,7 +126,7 @@ class CreateTrainingController:
                 urine_color_enum = URINE_COLOR(urine_color)
 
             except ValueError:
-                raise WrongTypeParameter('urine_color', f"one of {[urine_color.name for urine_color in URINE_COLOR]}", urine_color)
+                raise WrongTypeParameter('urine_color', f"one of {[u.value for u in URINE_COLOR]}", urine_color)
 
             pre_training_symptoms = request.data.get('pre_training_symptoms')
 
@@ -138,7 +138,7 @@ class CreateTrainingController:
                     try:
                         SYMPTOMS(symptom)
                     except ValueError:
-                        raise WrongTypeParameter('pre_training_symptoms', f"one of {[symptom.name for symptom in SYMPTOMS]}", symptom)
+                        raise WrongTypeParameter('pre_training_symptoms', f"one of {[s.value for s in SYMPTOMS]}", symptom)
      
             # pesoem Kg
             pre_training_weight = request.data.get('pre_training_weight')
@@ -217,7 +217,7 @@ class CreateTrainingController:
                     try:
                         SYMPTOMS(symptom)
                     except ValueError:
-                        raise WrongTypeParameter('post_training_symptoms', f"one of {[symptom.name for symptom in SYMPTOMS]}", symptom)
+                        raise WrongTypeParameter('post_training_symptoms', f"one of {[s.value for s in SYMPTOMS]}", symptom)
             
             # peso em Kg
             post_training_weight= request.data.get('post_training_weight')

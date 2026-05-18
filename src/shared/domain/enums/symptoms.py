@@ -1,9 +1,9 @@
 from enum import Enum
 
 class SYMPTOMS(Enum):
-    CRAMP = "CÂIMBRA"
+    CRAMP = "CAIMBRA"
     STRESS = "ESTRESSE"
-    PAIN = "DOR MUSCULAR"
-    NAUSEA = "NÁUSEA"
-    HEADACHE = "DOR DE CABEÇA"
+    PAIN = "DOR_MUSCULAR"
+    NAUSEA = "NAUSEA"
+    HEADACHE = "DOR_DE_CABECA"
     NONE = "NENHUM"

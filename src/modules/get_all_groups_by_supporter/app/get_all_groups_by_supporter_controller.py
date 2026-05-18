@@ -46,7 +46,7 @@ class GetAllGroupsBySupporterController:
                     }
                     for group_id, group_data in groups.items()
                 ],
-                "message": "Trainings andathletes linked to the supporter retrieved successfully"
+                "message": "Trainings and athletes linked to the supporter retrieved successfully"
             }
 
             return OK(viewmodel)
