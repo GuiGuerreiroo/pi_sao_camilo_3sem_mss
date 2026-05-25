@@ -56,7 +56,7 @@ class Test_UserRepositoryMock:
         repo = UserRepositoryMock()
         user = repo.update_user(
             user_id="550e8400-e29b-41d4-a716-446655440001",
-            name="Joao Guirao",
+            new_name="Joao Guirao",
             new_height=1.75,
         )
 
