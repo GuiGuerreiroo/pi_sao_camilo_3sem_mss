@@ -41,13 +41,13 @@ class IUserRepository(ABC):
         self, 
         user_id: str, 
         name: str | None, 
-        new_email: str | None,
         new_height: float | None
     ) -> Optional[User]:
         """
         If user not found return None
         """
-        # new_role will not be changed
+        # role will not be able to be changed
+        # email will not be able to be changed
         pass
     
     @abstractmethod

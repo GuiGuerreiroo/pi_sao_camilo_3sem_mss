@@ -35,3 +35,11 @@ class DataIngestionError(BaseError):
 class BedrockIntegrationError(BaseError):
     def __init__(self, message: str):
         super().__init__(f'Error generating AI analysis: {message}')
+
+class CognitoNotAuthorizedError(BaseError):
+    def __init__(self, message: str = "Invalid or expired access token, or incorrect old password."):
+        super().__init__(message)
+
+class CognitoInvalidPasswordError(BaseError):
+    def __init__(self, message: str = "New password does not meet security requirements."):
+        super().__init__(message)
