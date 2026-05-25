@@ -126,7 +126,6 @@ class UserRepositoryDynamo(IUserRepository):
         self, 
         user_id: str,
         new_name: str | None, 
-        new_email: str | None,
         new_height: float | None
     ) -> Optional[User]:
 
@@ -140,13 +139,11 @@ class UserRepositoryDynamo(IUserRepository):
         if new_name:
             item_to_update['name'] = new_name
 
-        if new_email:
-            item_to_update["email"]= new_email
-
         if new_height:
             item_to_update["height"]= new_height
 
         # new_role will not be changed, so we don't need to update it
+        # new_email will not be changed, so we don't need to update it
         
 
         update = self.dynamo.update_item(

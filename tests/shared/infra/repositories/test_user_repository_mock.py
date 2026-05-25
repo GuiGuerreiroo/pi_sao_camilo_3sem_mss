@@ -57,20 +57,19 @@ class Test_UserRepositoryMock:
         user = repo.update_user(
             user_id="550e8400-e29b-41d4-a716-446655440001",
             name="Joao Guirao",
-            new_email="joao.guirao@maua.br",
             new_height=1.75,
         )
 
         assert user is not None
         assert user.name == "Joao Guirao"
-        assert user.email == "joao.guirao@maua.br"
+        assert user.email == "21.00678-2@maua.br"
         assert user.role == ROLE.ADM
 
         assert user.height == 1.75
 
     def test_update_user_not_found(self):
         repo = UserRepositoryMock()
-        user = repo.update_user("non-existent-id", "Bruno Guirao", None, None)
+        user = repo.update_user("non-existent-id", "Bruno Guirao", None)
         assert user is None
 
     def test_get_user_by_email(self):
