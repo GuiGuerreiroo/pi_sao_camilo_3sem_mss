@@ -25,7 +25,7 @@ class Test_GetAllGroupsBySupporterController:
         response = controller(request=request)
 
         assert response.status_code == 200
-        assert response.body['message'] == 'Trainings andathletes linked to the supporter retrieved successfully'
+        assert response.body['message'] == 'Trainings and athletes linked to the supporter retrieved successfully'
         assert len(response.body['groups']) == 2
         
         # Verify first group data
