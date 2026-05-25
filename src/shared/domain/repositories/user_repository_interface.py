@@ -40,7 +40,7 @@ class IUserRepository(ABC):
     def update_user(
         self, 
         user_id: str, 
-        name: str | None, 
+        new_name: str | None, 
         new_height: float | None
     ) -> Optional[User]:
         """

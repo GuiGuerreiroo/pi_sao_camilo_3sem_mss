@@ -49,7 +49,7 @@ class UpdateUserUsecase:
 
         updated_user = self.repo.update_user(
             user_id=user_id, 
-            name=new_name,
+            new_name=new_name,
             new_height=new_height
         )
 

@@ -101,7 +101,7 @@ class Test_UpdateUserController:
         response = controller(request=request)
 
         assert response.status_code == 400
-        assert response.body == "Field old_password, new_password and access_token must be provided together is missing"
+        assert response.body == "Field old_password, new_password and access_token must be provided together, some of them is missing"
 
     def test_update_user_controller_cognito_not_authorized(self):
         usecase = MagicMock()

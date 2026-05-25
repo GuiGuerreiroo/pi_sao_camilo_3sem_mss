@@ -61,7 +61,7 @@ class UpdateUserController:
             # this line bellow validates if 3 of the parameters are provided together
             auth_fields = [old_password, new_password, access_token]
             if any(auth_fields) and not all(auth_fields):
-                raise MissingParameters('old_password, new_password and access_token must be provided together')
+                raise MissingParameters('old_password, new_password and access_token must be provided together, some of them')
 
             user = self.UpdateUserUsecase(
                 user_id=requester_user.user_id, 

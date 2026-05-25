@@ -89,13 +89,13 @@ class UserRepositoryMock(IUserRepository):
     def update_user(
         self,
         user_id: str, 
-        name: str | None, 
+        new_name: str | None, 
         new_height: float | None
     ) -> Optional[User]:
         for user in self.users:
             if user.user_id == str(user_id):
-                if name is not None:
-                    user.name = name
+                if new_name is not None:
+                    user.name = new_name
                 if new_height is not None:
                     user.height = new_height
                 return user
