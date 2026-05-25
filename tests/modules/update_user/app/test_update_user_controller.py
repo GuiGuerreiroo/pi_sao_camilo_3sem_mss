@@ -3,11 +3,12 @@ from src.modules.update_user.app.update_user_usecase import UpdateUserUsecase
 from src.shared.helpers.external_interfaces.http_models import HttpRequest
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 from src.shared.helpers.errors.usecase_errors import CognitoNotAuthorizedError, CognitoInvalidPasswordError
-from unittest.mock import MagicMock
+from unittest.mock import patch, MagicMock
 
 
 class Test_UpdateUserController:
-    def test_update_user_controller(self):
+    @patch('boto3.client')
+    def test_update_user_controller(self, mock_boto):
         repo = UserRepositoryMock()
         usecase = UpdateUserUsecase(repo=repo)
         controller = UpdateUserController(usecase=usecase)
@@ -19,7 +20,8 @@ class Test_UpdateUserController:
                 'sub': '550e8400-e29b-41d4-a716-446655440002',
                 'custom:role': 'USER'
             },
-            'new_name': 'Guilherme Atualizado'
+            'new_name': 'Guilherme Atualizado',
+            'access_token': 'dummy_access_token'
         })
 
         response = controller(request=request)
@@ -54,7 +56,8 @@ class Test_UpdateUserController:
                 'sub': '550e8400-e29b-41d4-a716-446655440002',
                 'custom:role': 'USER'
             },
-            'new_name': 123
+            'new_name': 123,
+            'access_token': 'dummy_access_token'
         })
 
         response = controller(request=request)
@@ -62,7 +65,8 @@ class Test_UpdateUserController:
         assert response.status_code == 400
         assert response.body == "Field new_name isn't in the right type.\n Received: <class 'int'>.\n Expected: str"
 
-    def test_update_user_not_found(self):
+    @patch('boto3.client')
+    def test_update_user_not_found(self, mock_boto):
         repo = UserRepositoryMock()
         usecase = UpdateUserUsecase(repo=repo)
         controller = UpdateUserController(usecase=usecase)
@@ -74,7 +78,8 @@ class Test_UpdateUserController:
                 'sub': 'non-existent',
                 'custom:role': 'USER'
             },
-            'new_name': 'Ghost'
+            'new_name': 'Ghost',
+            'access_token': 'dummy_access_token'
         })
 
         response = controller(request=request)

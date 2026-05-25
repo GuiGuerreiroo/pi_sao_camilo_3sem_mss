@@ -24,6 +24,11 @@ class UpdateUserController:
                 raise WrongTypeParameter('user_id', 'str', type(requester_user.user_id))
             
         
+            access_token = request.data.get('access_token')
+            if access_token is not None:
+                if not isinstance(access_token, str):
+                    raise WrongTypeParameter('access_token', 'str', type(access_token))
+
             new_height = request.data.get('new_height')
             if new_height is not None:
                 # if the user is from ROLE USER he has the height field
@@ -43,7 +48,7 @@ class UpdateUserController:
                 
                 if len(new_name) == 0:
                     raise WrongTypeParameter('new_name', 'non-empty str', 'empty str')
-                
+
                 if access_token is None:
                     raise MissingParameters('access_token')
                 
@@ -58,17 +63,13 @@ class UpdateUserController:
             if new_password is not None:
                 if not isinstance(new_password, str):
                     raise WrongTypeParameter('new_password', 'str', type(new_password))
-                
-            access_token= request.data.get('access_token')
-            if access_token is not None:
-                if not isinstance(access_token, str):
-                    raise WrongTypeParameter('access_token', 'str', type(access_token))
 
             # this line bellow validates if 3 of the parameters are provided together
             auth_fields = [old_password, new_password]
-            if any(auth_fields) and all(auth_fields):
-                if access_token is None:
-                    raise MissingParameters('access_token')
+            if any(auth_fields):
+                if not (old_password and new_password and access_token):
+                    raise MissingParameters('old_password, new_password and access_token must be provided together, some of them')
+
 
             user = self.UpdateUserUsecase(
                 user_id=requester_user.user_id, 

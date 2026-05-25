@@ -1,11 +1,14 @@
+from unittest.mock import patch, MagicMock
 import json
 
-from src.modules.update_user.app.update_user_presenter import lambda_handler
+from src.modules.update_user.app.update_user_presenter import lambda_handler, usecase
 
 
 class Test_UpdateUserPresenter:
 
-    def test_update_user(self):
+    @patch('boto3.client')
+    def test_update_user(self, mock_boto):
+        usecase.cognito_client = MagicMock()
         event = {
             "version": "2.0",
             "routeKey": "$default",
@@ -49,7 +52,7 @@ class Test_UpdateUserPresenter:
                 "time": "12/Mar/2020:19:03:58 +0000",
                 "timeEpoch": 1583348638390
             },
-            "body": '{"new_name": "João Soller"}',
+            "body": '{"new_name": "João Soller", "access_token": "dummy_access_token"}',
             "pathParameters": None,
             "isBase64Encoded": None,
             "stageVariables": None
