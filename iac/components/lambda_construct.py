@@ -141,6 +141,14 @@ class LambdaConstruct(Construct):
             authorizer=authorizer
         )
 
+        self.update_user_function= self.create_lambda_api_gateway_integration(
+            module_name="update_user",
+            method="PUT",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
+
         self.create_training_function= self.create_lambda_api_gateway_integration(
             module_name="create_training",
             method="POST",
@@ -200,7 +208,8 @@ class LambdaConstruct(Construct):
             self.create_group_function,
             self.update_group_function,
             self.delete_group_function,
-            self.get_all_groups_by_supporter_function
+            self.get_all_groups_by_supporter_function,
+            self.update_user_function
         ]
 
         self.functions_that_need_cognito_iam_policy= [
@@ -208,7 +217,8 @@ class LambdaConstruct(Construct):
             self.auth_user_function,
             self.refresh_token_function,
             self.confirm_user_function,
-            self.resend_code_function
+            self.resend_code_function,
+            self.update_user_function
         ]
 
         self.functions_that_need_bedrock_access= [

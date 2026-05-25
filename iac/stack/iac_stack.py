@@ -98,7 +98,9 @@ class IacStack(Stack):
                 "cognito-idp:AdminInitiateAuth",
                 "cognito-idp:ConfirmSignUp",
                 "cognito-idp:ResendConfirmationCode",
-                "cognito-idp:AdminDeleteUser"
+                "cognito-idp:AdminDeleteUser",
+                "cognito-idp:ChangePassword",    
+                "cognito-idp:UpdateUserAttributes"
             ],
             resources=["*"]
         )
