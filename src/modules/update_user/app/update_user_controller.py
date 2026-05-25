@@ -41,6 +41,12 @@ class UpdateUserController:
                 if not isinstance(new_name, str):
                     raise WrongTypeParameter('new_name', 'str', type(new_name))
                 
+                if len(new_name) == 0:
+                    raise WrongTypeParameter('new_name', 'non-empty str', 'empty str')
+                
+                if access_token is None:
+                    raise MissingParameters('access_token')
+                
             # won't be allowed to change ROLE
                     
             old_password = request.data.get('old_password')
@@ -59,9 +65,10 @@ class UpdateUserController:
                     raise WrongTypeParameter('access_token', 'str', type(access_token))
 
             # this line bellow validates if 3 of the parameters are provided together
-            auth_fields = [old_password, new_password, access_token]
-            if any(auth_fields) and not all(auth_fields):
-                raise MissingParameters('old_password, new_password and access_token must be provided together, some of them')
+            auth_fields = [old_password, new_password]
+            if any(auth_fields) and all(auth_fields):
+                if access_token is None:
+                    raise MissingParameters('access_token')
 
             user = self.UpdateUserUsecase(
                 user_id=requester_user.user_id, 
