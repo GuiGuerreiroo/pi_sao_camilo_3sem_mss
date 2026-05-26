@@ -121,8 +121,8 @@ class Test_UpdateUserController:
                 'custom:role': 'USER'
             },
             'access_token': 'invalid_token',
-            'old_password': '123',
-            'new_password': '456'
+            'old_password': '123456',
+            'new_password': '456789'
         })
 
         response = controller(request=request)
@@ -143,8 +143,8 @@ class Test_UpdateUserController:
                 'custom:role': 'USER'
             },
             'access_token': 'token',
-            'old_password': '123',
-            'new_password': '456'
+            'old_password': '123456',
+            'new_password': '456789'
         })
 
         response = controller(request=request)

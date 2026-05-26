@@ -47,11 +47,14 @@ class UpdateUserUsecase:
             except ClientError as e:
                 raise Exception(f"Cognito error: {str(e)}")
 
-        updated_user = self.repo.update_user(
-            user_id=user_id, 
-            new_name=new_name,
-            new_height=new_height
-        )
+        if new_name is not None or new_height is not None:
+            updated_user = self.repo.update_user(
+                user_id=user_id, 
+                new_name=new_name,
+                new_height=new_height
+            )
+        else:
+            updated_user = self.repo.get_user(user_id=user_id)
 
         if updated_user is None:
             raise NoItemsFound("user_id")

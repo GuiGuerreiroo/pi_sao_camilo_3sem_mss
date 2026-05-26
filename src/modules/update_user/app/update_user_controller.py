@@ -38,6 +38,9 @@ class UpdateUserController:
                             new_height = float(new_height)
                         else:
                             raise WrongTypeParameter('new_height', 'float', type(new_height))
+                        
+                    if new_height <= 0:
+                        raise WrongTypeParameter('new_height', 'positive float', new_height)
                 else:
                     raise ForbiddenAction('user that doesn\'t have height to update')
 
@@ -48,6 +51,9 @@ class UpdateUserController:
                 
                 if len(new_name) == 0:
                     raise WrongTypeParameter('new_name', 'non-empty str', 'empty str')
+                
+                if len(new_name) < 3:
+                    raise WrongTypeParameter('new_name', 'str with at least 3 characters', 'str with less than 3 characters')
 
                 if access_token is None:
                     raise MissingParameters('access_token')
@@ -63,6 +69,9 @@ class UpdateUserController:
             if new_password is not None:
                 if not isinstance(new_password, str):
                     raise WrongTypeParameter('new_password', 'str', type(new_password))
+                
+                if len(new_password) < 6:
+                    raise WrongTypeParameter('new_password', 'str with at least 6 characters', 'str with less than 6 characters')
 
             # this line bellow validates if 3 of the parameters are provided together
             auth_fields = [old_password, new_password]
