@@ -2,7 +2,9 @@ from aws_cdk import (
     Stack,
     aws_iam as iam,
     aws_apigateway as apigw,
-    aws_events_targets as targets
+    aws_events_targets as targets,
+    aws_lambda_event_sources as event_sources,
+    aws_lambda as lambda_
 )
 from constructs import Construct
 import os
@@ -90,6 +92,24 @@ class IacStack(Stack):
             )
         )
 
+        self.lambda_construct.delete_expired_user_function.add_event_source(
+            event_sources.DynamoEventSource(
+                self.dynamo_construct.sao_camilo_table,
+                starting_position=lambda_.StartingPosition.LATEST,
+                batch_size=5,
+                retry_attempts=3,
+                filters=[
+                    lambda_.FilterCriteria.filter({
+                        "eventName": lambda_.FilterRule.is_equal("REMOVE"),
+                        "userIdentity": {
+                            "type": lambda_.FilterRule.is_equal("Service"),
+                            "principalId": lambda_.FilterRule.is_equal("dynamodb.amazonaws.com")
+                        }
+                    })
+                ]
+            )
+        )
+
         # cognito access
         cognito_policy = iam.PolicyStatement(
             actions=[
@@ -100,7 +120,9 @@ class IacStack(Stack):
                 "cognito-idp:ResendConfirmationCode",
                 "cognito-idp:AdminDeleteUser",
                 "cognito-idp:ChangePassword",    
-                "cognito-idp:UpdateUserAttributes"
+                "cognito-idp:UpdateUserAttributes",
+                "cognito-idp:ForgotPassword",
+                "cognito-idp:ConfirmForgotPassword"
             ],
             resources=["*"]
         )

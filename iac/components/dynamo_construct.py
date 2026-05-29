@@ -49,7 +49,8 @@ class DynamoConstruct(Construct):
             time_to_live_attribute= "expires_at",
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=removal_policy,
-            point_in_time_recovery=True if stage == 'PROD' else False
+            point_in_time_recovery=True if stage == 'PROD' else False,
+            stream=dynamodb.StreamViewType.OLD_IMAGE
         )
 
         # configurar as gsis no futuro

@@ -133,6 +133,28 @@ class LambdaConstruct(Construct):
             # essa rota nao tem authorizer
         )
 
+        self.change_password_function= self.create_lambda_api_gateway_integration(
+            module_name="change_password",
+            method="PUT",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables
+            # essa rota nao tem authorizer
+        )
+
+        self.forgot_password_function= self.create_lambda_api_gateway_integration(
+            module_name="forgot_password",
+            method="POST",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables
+            # essa rota nao tem authorizer
+        )
+
+        self.delete_expired_user_function= self.create_background_lambda(
+            module_name="delete_expired_user",
+            environment_variables=environment_variables
+            # essa rota nao tem authorizer
+        )
+
         self.get_user_function= self.create_lambda_api_gateway_integration(
             module_name="get_user",
             method="GET",
@@ -218,7 +240,10 @@ class LambdaConstruct(Construct):
             self.refresh_token_function,
             self.confirm_user_function,
             self.resend_code_function,
-            self.update_user_function
+            self.update_user_function,
+            self.delete_expired_user_function,
+            self.change_password_function,
+            self.forgot_password_function
         ]
 
         self.functions_that_need_bedrock_access= [
