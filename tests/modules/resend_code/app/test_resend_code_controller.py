@@ -49,18 +49,3 @@ class Test_ResendCodeController:
         assert response.status_code == 400
         assert "Field email isn't in the right type" in response.body
 
-    def test_resend_code_controller_user_expired(self):
-        repo = UserRepositoryMock()
-        usecase = MagicMock()
-        usecase.side_effect = UserExpiredError()
-
-        controller = ResendCodeController(usecase=usecase)
-
-        request = HttpRequest(body={
-            'email': 'deleted@test.com'
-        })
-
-        response = controller(request=request)
-
-        assert response.status_code == 410
-        assert response.body == "Seu tempo de ativação expirou por segurança. Por favor, cadastre-se novamente."

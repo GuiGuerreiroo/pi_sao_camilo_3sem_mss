@@ -26,24 +26,6 @@ class Test_ResendCodeUseCase:
             Username=email
         )
 
-    def test_resend_code_user_expired(self):
-        repo = UserRepositoryMock()
-        usecase = ResendCodeUseCase(repo=repo)
-        
-        usecase.cognito = MagicMock()
-        usecase.cognito.admin_delete_user.return_value = {}
-
-        # User is not in DB (simulating TTL deletion)
-        email = "deleted@test.com"
-        
-        with pytest.raises(UserExpiredError):
-            usecase(email=email)
-            
-        usecase.cognito.admin_delete_user.assert_called_once_with(
-            UserPoolId=usecase.user_pool_id,
-            Username=email
-        )
-
     def test_resend_code_user_already_confirmed(self):
         from src.shared.helpers.errors.usecase_errors import UserAlreadyConfirmedError
         repo = UserRepositoryMock()
@@ -55,6 +37,20 @@ class Test_ResendCodeUseCase:
         email = "25.00178-5@maua.br"
         
         with pytest.raises(UserAlreadyConfirmedError):
+            usecase(email=email)
+            
+        usecase.cognito.resend_confirmation_code.assert_not_called()
+
+    def test_resend_code_user_expired(self):
+        repo = UserRepositoryMock()
+        usecase = ResendCodeUseCase(repo=repo)
+        
+        usecase.cognito = MagicMock()
+
+        # Email que não existe no mock DB
+        email = "inexistente@maua.br"
+        
+        with pytest.raises(UserExpiredError):
             usecase(email=email)
             
         usecase.cognito.resend_confirmation_code.assert_not_called()

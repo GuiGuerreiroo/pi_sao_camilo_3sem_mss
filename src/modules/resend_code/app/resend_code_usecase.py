@@ -36,18 +36,6 @@ class ResendCodeUseCase:
             raise UserAlreadyConfirmedError()
 
         else:
-            try:
-                self.cognito.admin_delete_user(
-                    UserPoolId=self.user_pool_id,
-                    Username=email
-                )
-
-            except self.cognito.exceptions.UserNotFoundException:
-                pass
-
-            except ClientError as e:
-                raise e
-
             # erro para falar que seu usuario foi deletado do banco e precisa se registrar novamente
             raise UserExpiredError()
     
