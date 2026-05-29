@@ -56,7 +56,7 @@ class AuthUserController:
             message = err.response.get('Error', {}).get('Message', str(err))
 
             if code in ['NotAuthorizedException', 'UserNotFoundException']:
-                return Forbidden(body={'message': 'Token de atualização inválido ou expirado'})
+                return Forbidden(body={'message': 'Email ou senha incorretos'})
             if code == 'UserNotConfirmedException':
                 return Forbidden(body={'message': 'Usuário não confirmado'})
             if code in ['TooManyRequestsException', 'LimitExceededException']:
