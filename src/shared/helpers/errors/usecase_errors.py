@@ -28,6 +28,11 @@ class UserAlreadyConfirmedError(BaseError):
     def __init__(self, message: str = "Usuário já foi confirmado."):
         super().__init__(message)
 
+class UserNeedsConfirmationError(BaseError):
+    def __init__(self, message: str = "O usuário precisa ser confirmado."):
+        super().__init__(message)
+
+
 class DataIngestionError(BaseError):
     def __init__(self, message: str):
         super().__init__(f'Data ingestion failed: {message}')
@@ -42,4 +47,16 @@ class CognitoNotAuthorizedError(BaseError):
 
 class CognitoInvalidPasswordError(BaseError):
     def __init__(self, message: str = "New password does not meet security requirements."):
+        super().__init__(message)
+
+class CodeMismatchError(BaseError):
+    def __init__(self, message: str = "Invalid verification code provided, please try again."):
+        super().__init__(message)
+
+class ExpiredCodeError(BaseError):
+    def __init__(self, message: str = "Invalid code provided, please request a code again."):
+        super().__init__(message)
+
+class InvalidPasswordError(BaseError):
+    def __init__(self, message: str = "Invalid password format. Password must meet security requirements."):
         super().__init__(message)
