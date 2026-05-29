@@ -80,7 +80,7 @@ class CreateTrainingController:
 
             # validando que duration está em minutos
             if duration < 1:
-                raise InvalidRange('duration', 'duration should be greater than 0 minutes')
+                raise InvalidRange('duration', 'duration should be greater than 1 minute')
 
             # validando a data de inicio é menor que a de fim
             if start_date >= end_date:
