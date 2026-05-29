@@ -107,7 +107,7 @@ class Test_CreateTrainingPresenter:
                 "post_training_symptoms": [],
                 "post_training_weight": 69.5,
                 "soaked_clothes": True,
-                "training_intensity": 7.0
+                "training_intensity": 7
             }),
             "pathParameters": {
                 "parameter1": "value1"

@@ -48,7 +48,7 @@ class Test_CreateTrainingController:
             "post_training_symptoms": [],
             "post_training_weight": 69.5,
             "soaked_clothes": True,
-            "training_intensity": 7.0
+            "training_intensity": 7
         })
 
         response = controller(request=request)
