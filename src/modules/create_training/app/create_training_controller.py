@@ -248,8 +248,8 @@ class CreateTrainingController:
             if training_intensity is None:
                 raise MissingParameters('training_intensity')
 
-            if not isinstance(training_intensity, float):
-                raise WrongTypeParameter('training_intensity', 'float', type(training_intensity))
+            if not isinstance(training_intensity, int):
+                raise WrongTypeParameter('training_intensity', 'int', type(training_intensity))
 
             # intensidade do treino precisa ser de 1 a 10
             if training_intensity < 1 or training_intensity > 10:
