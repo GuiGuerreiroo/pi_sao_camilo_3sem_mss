@@ -4,7 +4,8 @@ from aws_cdk import (
     aws_apigateway as apigw,
     aws_events_targets as targets,
     aws_lambda_event_sources as event_sources,
-    aws_lambda as lambda_
+    aws_lambda as lambda_,
+    aws_cognito as cognito
 )
 from constructs import Construct
 import os
@@ -83,6 +84,11 @@ class IacStack(Stack):
             rest_api=self.apigw_construct.rest_api,
             environment_variables=ENVIRONMENT_VARIABLES,
             authorizer= api_authorizer
+        )
+
+        self.cognito_construct.user_pool.add_trigger(
+            cognito.UserPoolOperation.CUSTOM_MESSAGE,
+            self.lambda_construct.cognito_custom_message_function
         )
 
         # add the lambda to be trigged by the event bridge when the .pdf object is added to s3
