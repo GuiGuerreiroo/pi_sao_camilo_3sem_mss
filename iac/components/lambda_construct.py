@@ -231,7 +231,8 @@ class LambdaConstruct(Construct):
             self.update_group_function,
             self.delete_group_function,
             self.get_all_groups_by_supporter_function,
-            self.update_user_function
+            self.update_user_function,
+            self.forgot_password_function
         ]
 
         self.functions_that_need_cognito_iam_policy= [
