@@ -158,7 +158,7 @@ class LambdaConstruct(Construct):
         # this lambda is just used to change the cognito's message depending of what the user is asking
         self.cognito_custom_message_function= self.create_background_lambda(
             module_name="cognito_custom_message",
-            environment_variables=environment_variables
+            environment_variables={"STAGE": environment_variables.get("STAGE", "TEST")}
         )
 
         self.get_user_function= self.create_lambda_api_gateway_integration(
