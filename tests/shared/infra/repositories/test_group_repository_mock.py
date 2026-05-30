@@ -30,6 +30,15 @@ class Test_GroupRepositoryMock:
         
         assert group is None
 
+    def test_get_all_groups(self):
+        repo = GroupRepositoryMock()
+        
+        groups = repo.get_all_groups()
+        
+        assert len(groups) == 2
+        assert str(groups[0].group_id) == "660e8400-e29b-41d4-a716-446655440001"
+        assert str(groups[1].group_id) == "660e8400-e29b-41d4-a716-446655440002"
+
     def test_get_all_groups_by_supporter_id(self):
         repo = GroupRepositoryMock()
         

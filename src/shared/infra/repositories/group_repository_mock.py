@@ -28,6 +28,9 @@ class GroupRepositoryMock(IGroupRepository):
                 return group
         return None
 
+    def get_all_groups(self) -> List[Group]:
+        return self.groups
+
     def get_all_groups_by_supporter_id(self, supporter_id: str) -> List[Group]:
         matching_groups = []
         for group in self.groups:

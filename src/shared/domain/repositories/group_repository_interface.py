@@ -17,6 +17,10 @@ class IGroupRepository(ABC):
         pass
 
     @abstractmethod
+    def get_all_groups(self) -> List[Group]:
+        pass
+
+    @abstractmethod
     def get_all_groups_by_supporter_id(self, supporter_id: str) -> List[Group]:
         pass
 

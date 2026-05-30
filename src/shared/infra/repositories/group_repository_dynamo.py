@@ -87,6 +87,27 @@ class GroupRepositoryDynamo(IGroupRepository):
 
         return group
         
+    def get_all_groups(self) -> List[Group]:
+        filter_exp = Key(self.dynamo.sort_key).eq(self.sort_key_format())
+
+        items_dict = self.dynamo.scan_items(filter_expression=filter_exp)
+
+        items = items_dict.get("Items", [])
+
+        groups=[]
+
+        for item in items:
+            item["group_id"]= self.remove_prefix(item["group_id"])
+
+            item.pop("PK", None)
+            item.pop("SK", None)
+
+            group= Group.model_validate(item)
+
+            groups.append(group)
+
+        return groups
+
 
     def get_all_groups_by_supporter_id(self, supporter_id: str) -> List[Group]:
         pk= self.dynamo.partition_key

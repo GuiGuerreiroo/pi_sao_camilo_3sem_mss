@@ -225,6 +225,14 @@ class LambdaConstruct(Construct):
             authorizer=authorizer
         )
 
+        self.get_all_groups_function= self.create_lambda_api_gateway_integration(
+            module_name="get_all_groups",
+            method="GET",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
+
         self.functions_that_need_db_access= [
             self.create_user_function,
             self.get_all_users_function,
@@ -237,6 +245,7 @@ class LambdaConstruct(Construct):
             self.update_group_function,
             self.delete_group_function,
             self.get_all_groups_by_supporter_function,
+            self.get_all_groups_function,
             self.update_user_function,
             self.forgot_password_function
         ]

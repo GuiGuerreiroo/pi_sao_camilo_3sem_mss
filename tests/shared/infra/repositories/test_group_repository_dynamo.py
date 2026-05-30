@@ -54,6 +54,26 @@ class Test_GroupRepositoryDynamo:
         assert resp is None
 
     @pytest.mark.skip(reason="Needs dynamoDB")
+    def test_get_all_groups(self):
+        os.environ["STAGE"] = "TEST"
+        
+        repo = GroupRepositoryDynamo()
+        new_group = Group(
+            group_id=uuid.uuid4(),
+            athlete_list_id=[uuid.uuid4()],
+            supporter_list_id=[uuid.uuid4()]
+        )
+        repo.create_group(new_group)
+        
+        resp = repo.get_all_groups()
+        
+        assert len(resp) >= 1
+        assert any(str(g.group_id) == str(new_group.group_id) for g in resp)
+        
+        # Clean up
+        repo.delete_group(str(new_group.group_id))
+
+    @pytest.mark.skip(reason="Needs dynamoDB")
     def test_get_all_groups_by_supporter_id(self):
         os.environ["STAGE"] = "TEST"
         
