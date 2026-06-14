@@ -38,8 +38,10 @@ class CreateTrainingUseCase:
         training_intensity: int
     ) -> Optional[Training]:
 
-        weight_difference = pre_training_weight - post_training_weight
+        # Calculamos a variação como Final - Inicial (para que a perda de peso seja representada como - , e o ganho como +)
+        weight_difference = post_training_weight - pre_training_weight
 
+        # Calcula a porcentagem de variação em relação ao peso inicial
         weight_variation_percentage = (weight_difference / pre_training_weight) * 100
         
         # pensar sobre esse campo
@@ -47,8 +49,10 @@ class CreateTrainingUseCase:
         pre_training_hydration_target_min = int(pre_training_weight * 5)
         pre_training_hydration_target_max = int(pre_training_weight * 10)
 
+        # Usamos -weight_difference porque a variação está como Final - Inicial (negativa para perdas).
+        # Subtrair o valor negativo adiciona o peso perdido (suor) à equação.
         # como as medidas de agua estao em ml, passamos para litros dividindo por 1000
-        ajusted_weight_difference= weight_difference + (during_training_hydration/1000) - (during_training_urine_elimination/1000)
+        ajusted_weight_difference= -weight_difference + (during_training_hydration/1000) - (during_training_urine_elimination/1000)
 
         # duration vira em minutos, portanto temos que transformar para horas dividindo por 60
         sudorese = ajusted_weight_difference / (duration/60)

@@ -30,12 +30,12 @@ class TrainingRepositoryMock(ITrainingRepository):
                 post_training_symptoms=[SYMPTOMS.NONE],
                 post_training_weight=69.5,
                 soaked_clothes=True,
-                training_intensity=7,
-                weight_difference=0.5,
+                training_intensity=8,
+                weight_difference=-0.5,
                 ajusted_weight_difference=0.7,
                 sudorese=0.7,
-                weight_variation_percentage=0.71,
-                ai_suggestion="Great training!"
+                weight_variation_percentage=-0.71,
+                ai_suggestion="Muito bem! Você manteve..."
             ),
             Training(
                 user_id="550e8400-e29b-41d4-a716-446655440002",
@@ -54,12 +54,12 @@ class TrainingRepositoryMock(ITrainingRepository):
                 post_training_symptoms=[SYMPTOMS.NONE],
                 post_training_weight=69.0,
                 soaked_clothes=False,
-                training_intensity=8,
-                weight_difference=1.0,
+                training_intensity=7,
+                weight_difference=-1.0,
                 ajusted_weight_difference=1.3,
                 sudorese=0.65,
-                weight_variation_percentage=1.42,
-                ai_suggestion="Remember to hydrate more."
+                weight_variation_percentage=-1.43,
+                ai_suggestion="Atenção: A sua perda de peso foi significativa..."
             )
         ]
 

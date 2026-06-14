@@ -95,11 +95,12 @@ class Training(BaseModel):
 
     # --- RESULTADOS COMPUTADOS ---
     weight_difference: float= Field(
-        description="Diferença de peso do usuário em Kg (Pré treino - Pós treino)"
+        description="Variação de peso do usuário em Kg (Pós treino - Pré treino)"
     )
 
+    # como o Weight difference esta sendo calculado como Final - Inicial e a formula de ajusted weight difference pede Inicial - Final, usamos -weight_difference 
     ajusted_weight_difference: float= Field(
-        description="Diferença de peso do usuário antes e depois do treinamento em Kg (Weight Difference (Kg) + During Training Hydratation (ml) - During Training Urine Elimination (ml)) unidade pode ser L ou Kg"
+        description="Diferença de peso do usuário antes e depois do treinamento em Kg (-Weight Difference (Kg) + During Training Hydratation (ml) - During Training Urine Elimination (ml)) unidade pode ser L ou Kg"
     )
 
     # pensar sobre esse campo
@@ -112,7 +113,7 @@ class Training(BaseModel):
     )
 
     weight_variation_percentage: float= Field(
-        description="Porcentagem de variação de peso do usuário antes e depois do treinamento ((Pré treino - Pós treino) / Pré treino) * 100 (%)"
+        description="Porcentagem de variação de peso do usuário antes e depois do treinamento ((Pós treino - Pré treino) / Pré treino) * 100 (%)"
     )
 
     # --- RESULTADOS DA IA ---
