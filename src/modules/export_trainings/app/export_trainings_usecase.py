@@ -163,7 +163,7 @@ class ExportTrainingsUseCase:
             weight_diff = f"{t.weight_difference:.2f}".replace('.', ',') if t.weight_difference is not None else "-"
             loss_perc = f"{t.weight_variation_percentage:.1f}%".replace('.', ',')
             sud_lh = f"{t.sudorese:.2f}".replace('.', ',')
-            urine = t.urine_color.value if t.urine_color else "-"
+            urine = t.urine_color.value.replace('_', '\n') if t.urine_color else "-"
             modality = t.modality.value[:8] if t.modality else "-" # Abbreviate safely
             pre_h = f"{t.pre_training_hydration:.0f}".replace('.', ',')
             dur_h = f"{t.during_training_hydration:.0f}".replace('.', ',') if t.during_training_hydration is not None else "-"
@@ -194,7 +194,7 @@ class ExportTrainingsUseCase:
             ('BOTTOMPADDING', (0, 1), (-1, -1), 8),
         ])
         
-        table = Table(table_data, colWidths=[40, 45, 35, 35, 35, 35, 40, 40, 40, 45, 40, 40, 60])
+        table = Table(table_data, colWidths=[40, 40, 35, 35, 35, 35, 40, 40, 40, 40, 40, 40, 70])
         table.setStyle(t_style)
         
         elements.append(table)

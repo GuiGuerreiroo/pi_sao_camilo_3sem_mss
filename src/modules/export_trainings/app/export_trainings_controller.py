@@ -7,6 +7,7 @@ from src.shared.helpers.errors.controller_errors import MissingParameters, Wrong
 from src.shared.helpers.errors.domain_errors import EntityError
 from .export_trainings_usecase import ExportTrainingsUseCase
 import json
+from datetime import datetime
 
 class ExportTrainingsController:
     def __init__(self, usecase: ExportTrainingsUseCase):
@@ -51,9 +52,10 @@ class ExportTrainingsController:
                 requester_name=requester_user.name
             )
 
+            current_date = datetime.now().strftime('%d_%m_%Y')
             headers = {
                 "Content-Type": "application/pdf",
-                "Content-Disposition": "attachment; filename=relatorio_treinos.pdf"
+                "Content-Disposition": f"attachment; filename=relatorio_treinos_{current_date}.pdf"
             }
             
             response = OK(base64_pdf)
