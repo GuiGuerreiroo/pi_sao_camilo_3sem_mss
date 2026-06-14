@@ -233,6 +233,14 @@ class LambdaConstruct(Construct):
             authorizer=authorizer
         )
 
+        self.export_trainings_function= self.create_lambda_api_gateway_integration(
+            module_name="export_trainings",
+            method="POST",
+            mss_api_resource=apigateway_resource,
+            environment_variables=environment_variables,
+            authorizer=authorizer
+        )
+
         self.functions_that_need_db_access= [
             self.create_user_function,
             self.get_all_users_function,
@@ -247,7 +255,8 @@ class LambdaConstruct(Construct):
             self.get_all_groups_by_supporter_function,
             self.get_all_groups_function,
             self.update_user_function,
-            self.forgot_password_function
+            self.forgot_password_function,
+            self.export_trainings_function
         ]
 
         self.functions_that_need_cognito_iam_policy= [
