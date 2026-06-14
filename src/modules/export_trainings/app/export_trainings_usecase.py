@@ -1,6 +1,6 @@
 from io import BytesIO
 import base64
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
@@ -104,7 +104,7 @@ class ExportTrainingsUseCase:
         
         # Meta info
         meta_data = [
-            [Paragraph("<b>Atleta:</b>", label_style), Paragraph(athlete_name, meta_value_style), Paragraph("<b>Data de Exportação:</b>", label_style), Paragraph(datetime.now().strftime('%d/%m/%Y %H:%M'), meta_value_style)],
+            [Paragraph("<b>Atleta:</b>", label_style), Paragraph(athlete_name, meta_value_style), Paragraph("<b>Data de Exportação:</b>", label_style), Paragraph(datetime.now(timezone(timedelta(hours=-3))).strftime('%d/%m/%Y %H:%M'), meta_value_style)],
             [Paragraph("<b>Treinador:</b>", label_style), Paragraph(requester_name, meta_value_style), "", ""]
         ]
         

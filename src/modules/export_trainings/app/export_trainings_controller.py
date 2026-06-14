@@ -6,8 +6,7 @@ from src.shared.infra.dto.user_apigateway_dto import UserApiGatewayDTO
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
 from .export_trainings_usecase import ExportTrainingsUseCase
-import json
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 class ExportTrainingsController:
     def __init__(self, usecase: ExportTrainingsUseCase):
@@ -52,7 +51,7 @@ class ExportTrainingsController:
                 requester_name=requester_user.name
             )
 
-            current_date = datetime.now().strftime('%d_%m_%Y')
+            current_date = datetime.now(timezone(timedelta(hours=-3))).strftime('%d_%m_%Y')
             headers = {
                 "Content-Type": "application/pdf",
                 "Content-Disposition": f"attachment; filename=relatorio_treinos_{current_date}.pdf"
