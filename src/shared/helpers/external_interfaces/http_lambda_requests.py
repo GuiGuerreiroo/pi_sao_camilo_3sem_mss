@@ -50,6 +50,17 @@ class LambdaHttpResponse(HttpResponse):
             "isBase64Encoded": False
         }
 
+    def toDictBase64(self) -> dict:
+        """
+        Returns a dict representation of the HttpResponse where the body is treated as a Base64 encoded string.
+        """
+        return {
+            "statusCode": self.status_code,
+            "body": self.body,
+            "headers": self.headers,
+            "isBase64Encoded": True
+        }
+
     def __repr__(self):
         return (
             f"HttpResponse (status_code={self.status_code}, body={self.body}, headers={self.headers})"
