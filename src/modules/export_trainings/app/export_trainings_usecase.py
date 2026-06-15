@@ -67,8 +67,7 @@ class ExportTrainingsUseCase:
         total_duration = sum(t.duration for t in selected_trainings if t.duration is not None)
         total_intensity = sum(t.training_intensity for t in selected_trainings if t.training_intensity is not None)
         
-        avg_duration = total_duration / total_sessions if total_sessions > 0 else 0
-        avg_duration_min = avg_duration / 60
+        avg_duration_min = total_duration / total_sessions if total_sessions > 0 else 0
         avg_intensity = total_intensity / total_sessions if total_sessions > 0 else 0
         
         avg_pre_hydration = total_pre_hydration / total_sessions if total_sessions > 0 else 0
@@ -159,12 +158,12 @@ class ExportTrainingsUseCase:
         
         for t in selected_trainings:
             date_str = datetime.fromtimestamp(t.start_date / 1000.0).strftime('%d/%m/%y')
-            duration_min = f"{t.duration / 60:.0f}"
+            duration_min = f"{t.duration:.0f}"
             weight_diff = f"{t.weight_difference:.2f}".replace('.', ',') if t.weight_difference is not None else "-"
             loss_perc = f"{t.weight_variation_percentage:.1f}%".replace('.', ',')
             sud_lh = f"{t.sudorese:.2f}".replace('.', ',')
             urine = t.urine_color.value.replace('_', '\n') if t.urine_color else "-"
-            modality = t.modality.value[:8] if t.modality else "-" # Abbreviate safely
+            modality = t.modality.value if t.modality else "-" 
             pre_h = f"{t.pre_training_hydration:.0f}".replace('.', ',')
             dur_h = f"{t.during_training_hydration:.0f}".replace('.', ',') if t.during_training_hydration is not None else "-"
             urine_elim = f"{t.during_training_urine_elimination:.0f}".replace('.', ',') if t.during_training_urine_elimination is not None else "-"

@@ -32,7 +32,7 @@ class Training(BaseModel):
 
     # timestamp miliseconds
     duration: float= Field(
-        description="Tempo total do treinamento em segundos"
+        description="Tempo total do treinamento em minutos"
     )
 
    # --- CLIMA (Condições Ambientais) ---
