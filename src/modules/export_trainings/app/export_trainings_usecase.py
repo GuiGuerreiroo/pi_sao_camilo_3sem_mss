@@ -193,7 +193,7 @@ class ExportTrainingsUseCase:
             ('BOTTOMPADDING', (0, 1), (-1, -1), 8),
         ])
         
-        table = Table(table_data, colWidths=[40, 40, 35, 35, 35, 35, 40, 40, 40, 40, 40, 40, 70])
+        table = Table(table_data, colWidths=[35, 55, 35, 35, 35, 35, 40, 40, 40, 40, 40, 35, 65])
         table.setStyle(t_style)
         
         elements.append(table)
